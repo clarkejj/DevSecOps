@@ -29,6 +29,9 @@ aws iam list-users --query "Users[].[UserName]" --output text
    # | \
    # xargs -I {} -P 10 aws iam delete-user --user-name "{}"
 
+   # Block users access to AWS EC2 meta data per https://gist.github.com/sebsto/20e550876db521710186
+   # sudo iptables -A OUTPUT -m owner ! --uid-owner root -d 169.254.169.254 -j DROP
+
 fancy_echo "aws ec2 describe-security-groups ..."
 aws ec2 describe-security-groups --output text
 
