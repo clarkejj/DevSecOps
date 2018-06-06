@@ -42,8 +42,9 @@ aws ec2 describe-instances # --filter Name=instance-type,Values=t2.nano
 fancy_echo "aws s3 ls (buckets) ..."
 aws s3 ls 
    # 2018-05-28 05:53:21 wilsonianinstitute.com
-
-
+# TODO: Extract BUCKETNAME :
+BUCKETNAME="wilsonianinstitute.com"  # DEBUGGING
+aws s3api list-objects --bucket $BUCKETNAME --query 'sum(Contents[].Size)' | awk '{print $0/1024/1024/1024" GB"}'
 
 exit
 
