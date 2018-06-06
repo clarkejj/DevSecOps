@@ -230,7 +230,7 @@ gcloud ml-engine predict \
 # CLASS_IDS  CLASSES  LOGISTIC                LOGITS                PROBABILITIES
 # [0]        [u'0']   [0.029467318207025528]  [-3.494563341140747]  [0.9705326557159424, 0.02946731448173523]
 # CLASS_IDS  CLASSES  LOGISTIC               LOGITS                PROBABILITIES
-# [0]        [u'0']   [0.03032654896378517]  [-3.464935779571533]  [0.9696734547615051, 0.03032655268907547]
+# [0]        [u'0']   [0.03032654896378517]   [-3.464935779571533]  [0.9696734547615051, 0.03032655268907547]
    # Where class 0 means income \<= 50k and class 1 means income >50k.
 
 # Congratulations.
