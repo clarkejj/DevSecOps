@@ -45,21 +45,24 @@ aws ec2 describe-instances # --filter Name=instance-type,Values=t2.nano
 fancy_echo "aws s3 ls (buckets) ..."
 aws s3 ls 
    # 2018-05-28 05:53:21 wilsonianinstitute.com
+
 # TODO: Extract BUCKETNAME :
    # Thanks to https://gist.github.com/sebsto/947f8cf66b4b4d4e82bc
-BUCKETNAME="wilsonianinstitute.com"  # DEBUGGING
-aws s3api list-objects --bucket $BUCKETNAME --query 'sum(Contents[].Size)' | awk '{print $0/1024/1024/1024" GB"}'
-
-exit
+#BUCKETNAME="wilsonianinstitute.com"  # DEBUGGING
+#aws s3api list-objects --bucket "$BUCKETNAME" --query 'sum(Contents[].Size)' | awk '{print $0/1024/1024/1024" GB"}'
+# In function sum(), invalid type for value: None, expected one of: ['array-number'], received: "null"
 
 fancy_echo "aws describe-vpcs ..."
+# TODO: Extract a vpc from list:
+VPC_INSTANCE='vpc-0ccb9311e7c1edb3e'
 # Using query language from http://jmespath.org/
-aws ec2 describe-vpcs --query "Vpcs[?VpcId == 'vpc-aaa22bbb'].CidrBlock"
+aws ec2 describe-vpcs --query 'Vpcs[?VpcId == "$VPC_INSTANCE"].CidrBlock'
    #[
-   #    "94.194.0.0/16"
+   #    "10.0.0.0/16"
    # ]
 
 exit
+
 TODO: List instance IDS:
 
 CIDR=$(aws ec2 describe-vpcs --query "Vpcs[?VpcId == 'vpc-aaa22bbb'].CidrBlock" --output text)
