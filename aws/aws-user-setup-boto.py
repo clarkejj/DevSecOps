@@ -1,3 +1,4 @@
+#/usr/bin/python
 
 # This assumes enviornment variables for AWS ACCESS_KEY and SECRET_KEY have been established.
 # Based on https://gist.github.com/sebsto/9a958ff1c761b8c7c90d
