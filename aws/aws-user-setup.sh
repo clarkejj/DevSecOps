@@ -3,6 +3,7 @@
 # aws-user-setup.sh
 # From https://www.slideshare.net/AmazonWebServices/dev301-automating-aws-with-the-aws-cli?from_action=save
 # by James Saryerwinnie, AWS Oct 9, 2015
+# TODO: Replace y/N answers with defaults. Q&A defeats the purpose of a script. Might as well use the console.
 
 import_key_pair(){
   echo-n "Would you like to import ~/.ssh/id_rsa.pub? [y/N]: "
