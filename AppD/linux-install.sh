@@ -11,21 +11,6 @@ cat /etc/issue  # says Debian release 6.7 (Final)
 echo $PWD  # says /home/ravello
 ls -al  # to see starter files in image
 
-sudo su - tomcat
-# echo $PWD  # /home/tomcat
-
-TOMCAT_HOME=/opt/tomcat/apache-tomcat-8.0.30
-export TOMCAT_HOME
-echo $TOMCAT_HOME
-# Need to background start: 
-chmod +x $TOMCAT_HOME/bin/*.sh
-$TOMCAT_HOME/bin/catalina.sh start  # for Tomcat started.
-# Get TOMCAT_PID
-PID="$(ps x | grep -m1 '/tomcat' | awk '{print $1}')" ; echo $PID
-netstat -natp | grep $PID
-
-# On your local machine: open "http://129.146.159.96/Cars_Sample_App/home.do"
-# to see "Supercar trader" page
 
 #### Switch back to admin user:
 # Load USER_PASSWORD
@@ -48,3 +33,20 @@ wget -O "$FILE_DOWNLOAD" https://drive.google.com/open?id=12Jf_kU8Xmj7k9GPvvTdLd
 # TODO: Verify SSH hash
 ls -al "$FILE_DOWNLOAD"  # should say 127787
 jar xvf "$FILE_DOWNLOAD" # not # tar -xvf "$FILE_DOWNLOAD"  # not or unzip 
+
+#### Bring up Tomcat:
+sudo su - tomcat
+# echo $PWD  # /home/tomcat
+
+TOMCAT_HOME=/opt/tomcat/apache-tomcat-8.0.30
+export TOMCAT_HOME
+echo $TOMCAT_HOME
+# Need to background start: 
+chmod +x $TOMCAT_HOME/bin/*.sh
+$TOMCAT_HOME/bin/catalina.sh start  # for Tomcat started.
+# Get TOMCAT_PID
+PID="$(ps x | grep -m1 '/tomcat' | awk '{print $1}')" ; echo $PID
+netstat -natp | grep $PID
+
+# On your local machine: open "http://129.146.159.96/Cars_Sample_App/home.do"
+# to see "Supercar trader" page
