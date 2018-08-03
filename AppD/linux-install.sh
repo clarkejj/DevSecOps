@@ -64,6 +64,9 @@ cd conf
 # TODO: in file 
 #Catalina:type=JspMonitor,WebModule=//localhost/Cars_Sample_App,name=jsp,J2EEApplication=none,J2EEServer=none
 # Background: https://www.mulesoft.com/tcat/tomcat-catalina
+# https://tomcat.apache.org/tomcat-6.0-doc/monitoring.html
+# Create a file alongside catalina.sh called setenv.sh so all changes are in a separate file.
+# Use CATALINA_OPTS rather than JAVA_OPTS since CATALINA_OPTS is only used on start whereas JAVA_OPTS is used on start and stop.
 
 # On your local machine: open http://129.146.152.161/Cars_Sample_App/home.do 
 # to see "Supercar trader" page
