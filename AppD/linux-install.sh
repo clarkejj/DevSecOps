@@ -1,10 +1,7 @@
 # linux-install.sh
 
-# From https://cloud.ravellosystems.com/#/hE4lpaLL58tqn8PCDbHOmBkRXrSEDh1kgFNIQHxZUqplcXcQBm7D2NnvFasm210X/apps/3125670382551/vms/?selectedIds=;6489016440455168
-#VM_IP=$1
-VM_IP="129.146.159.96"
-
-# In a Terminal, after you > YES | ssh ravello@129.146.159.96 and supply password, paste this:
+# IP address from https://cloud.ravellosystems.com/#/hE4lpaLL58tqn8PCDbHOmBkRXrSEDh1kgFNIQHxZUqplcXcQBm7D2NnvFasm210X/apps/3125670382551/vms/?selectedIds=;6489016440455168
+# In a Terminal, after you > ssh ravello@129.146.152.161 ; yes ; supply password, paste this:
 # At [ravello@Java101Template ~]$ 
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/AppD/linux-install.sh)"
 # https://github.com/wilsonmar/DevSecOps/blob/master/AppD/linux-install.sh
@@ -33,7 +30,7 @@ netstat -natp | grep $PID
 #### Switch back to admin user:
 # Load USER_PASSWORD
 # echo $USER_PASSWORD | sudo -S su ravello
-pause
+exit  # until fixed
 cd /home/ravello
 
 #### Download Java agent:
@@ -42,7 +39,7 @@ FILE_DOWNLOAD="AppServerAgent-4.5.0.23604.zip"
 wget -O "$FILE_DOWNLOAD" https://drive.google.com/open?id=1Kz1XlN_0tk3vrptQw1msfCDBeiNVb48L
 # TODO: Verify SSH hash
 ls -al "$FILE_DOWNLOAD"  # should say 127833
-# tar -xvf "$FILE_DOWNLOAD"  # not jar xvf or unzip 
+jar xvf "$FILE_DOWNLOAD" # not # tar -xvf "$FILE_DOWNLOAD"  # not or unzip 
 
 #### Download DB agent:
 FILE_DOWNLOAD="dbagent-4.5.0.671.zip"
