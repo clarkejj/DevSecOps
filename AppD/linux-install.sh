@@ -35,10 +35,16 @@ wget -O "$FILE_DOWNLOAD" https://drive.google.com/open?id=12Jf_kU8Xmj7k9GPvvTdLd
 ls -al "$FILE_DOWNLOAD"  # should say 127787
 jar xvf "$FILE_DOWNLOAD" # not # tar -xvf "$FILE_DOWNLOAD"  # not or unzip 
 
+#### Linux Server againt:
+# machineagent-bundle-64bit-linux-4.5.0.1285
+# $MACHINE_AGENT_HOME/jre/bin/java -jar 
+# $MACHINE_AGENT_HOME/machineagent.jar
+
 #### Bring up Tomcat:
 sudo su - tomcat
 # echo $PWD  # /home/tomcat
 
+# find / name tomcat 2>/dev/null
 TOMCAT_HOME=/opt/tomcat/apache-tomcat-8.0.30
 export TOMCAT_HOME
 echo $TOMCAT_HOME
@@ -52,5 +58,12 @@ netstat -natp | grep $PID
    # tcp        0      0 :::8009                     :::*                        LISTEN      1623/java           
    # tcp        0      0 :::8080                     :::*                        LISTEN      1623/java           
 
-# On your local machine: open "http://129.146.159.96/Cars_Sample_App/home.do"
+## Configure JMX:
+cd $TOMCAT_HOME
+cd conf
+# TODO: in file 
+#Catalina:type=JspMonitor,WebModule=//localhost/Cars_Sample_App,name=jsp,J2EEApplication=none,J2EEServer=none
+# Background: https://www.mulesoft.com/tcat/tomcat-catalina
+
+# On your local machine: open http://129.146.152.161/Cars_Sample_App/home.do 
 # to see "Supercar trader" page
