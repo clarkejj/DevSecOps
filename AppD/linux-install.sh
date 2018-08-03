@@ -25,6 +25,7 @@ wget -O "$FILE_DOWNLOAD" https://drive.google.com/open?id=1Kz1XlN_0tk3vrptQw1msf
 # TODO: Verify SSH hash
 ls -al "$FILE_DOWNLOAD"  # should say 127833
 jar xvf "$FILE_DOWNLOAD" # not # tar -xvf "$FILE_DOWNLOAD"  # not or unzip 
+tar xvf "$FILE_DOWNLOAD"
 
 #### Download DB agent:
 FILE_DOWNLOAD="dbagent-4.5.0.671.zip"
@@ -47,6 +48,9 @@ $TOMCAT_HOME/bin/catalina.sh start  # for Tomcat started.
 # Get TOMCAT_PID
 PID="$(ps x | grep -m1 '/tomcat' | awk '{print $1}')" ; echo $PID
 netstat -natp | grep $PID
+   # tcp        0      0 ::ffff:127.0.0.1:8005       :::*                        LISTEN      1623/java           
+   # tcp        0      0 :::8009                     :::*                        LISTEN      1623/java           
+   # tcp        0      0 :::8080                     :::*                        LISTEN      1623/java           
 
 # On your local machine: open "http://129.146.159.96/Cars_Sample_App/home.do"
 # to see "Supercar trader" page
