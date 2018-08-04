@@ -26,8 +26,11 @@ FILE_DOWNLOAD="AppServerAgent-4.5.0.23604.zip"
 wget -O "$FILE_DOWNLOAD" https://drive.google.com/open?id=1Kz1XlN_0tk3vrptQw1msfCDBeiNVb48L
 # TODO: Verify SSH hash
 ls -al "$FILE_DOWNLOAD"  # should say 127833
-jar xvf "$FILE_DOWNLOAD" # not # tar -xvf "$FILE_DOWNLOAD"  # not or unzip 
-tar xvf "$FILE_DOWNLOAD"
+# jar xvf "$FILE_DOWNLOAD" # not # tar -xvf "$FILE_DOWNLOAD"  # not or unzip 
+# tar xvf "$FILE_DOWNLOAD"
+mkdir appagent
+mv "$FILE_DOWNLOAD" appagent
+unzip  "$FILE_DOWNLOAD" -d appagent
 
 #### Download DB agent:
 FILE_DOWNLOAD="dbagent-4.5.0.671.zip"
@@ -46,13 +49,27 @@ jar xvf "$FILE_DOWNLOAD" # not # tar -xvf "$FILE_DOWNLOAD"  # not or unzip
 sudo su - tomcat
 # echo $PWD  # /home/tomcat
 
+export CATALINA_OPTS="$CATALINA_OPTS -javaagent:/home/ravello/appagent/javaagent.jar"
+echo $CATALINA_OPTS
+
+cd appagent/conf
+vi controller-info.xml
+<application-name></application-name>
+<tier-name></tier-name>
+<node-name></node-name>
+ <agent-runtime-dir></agent-runtime-dir>
+
 # find / name tomcat 2>/dev/null
 TOMCAT_HOME=/opt/tomcat/apache-tomcat-8.0.30
 export TOMCAT_HOME
 echo $TOMCAT_HOME
 # Need to background start: 
-chmod +x $TOMCAT_HOME/bin/*.sh
+sudo chmod +x $TOMCAT_HOME/bin/*.sh
+
+java -javaagent:/home/ravello/appagent/javaagent.jar
 $TOMCAT_HOME/bin/catalina.sh start  # for Tomcat started.
+/opt/tomcat/apache-tomcat-8.0.30/bin/catalina.sh start
+
 # Get TOMCAT_PID
 PID="$(ps x | grep -m1 '/tomcat' | awk '{print $1}')" ; echo $PID
 netstat -natp | grep $PID
@@ -64,13 +81,15 @@ netstat -natp | grep $PID
 cd $TOMCAT_HOME
 cd conf
 # Pull in file https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/AppD/setenv.sh)"
-wget -O setenv.sh "https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/AppD/setenv.sh)"
+wget -O setenv.sh "https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/AppD/setenv.sh"
 chmod 755 setenv.sh
 #Catalina:type=JspMonitor,WebModule=//localhost/Cars_Sample_App,name=jsp,J2EEApplication=none,J2EEServer=none
+export CATALINA_OPTS="$CATALINA_OPTS -javaagent:<agent_home>/javaagent.jar"
+
 # Background: https://www.mulesoft.com/tcat/tomcat-catalina
 # https://tomcat.apache.org/tomcat-6.0-doc/monitoring.html
 # Create a file alongside catalina.sh called setenv.sh so all changes are in a separate file.
 # Use CATALINA_OPTS rather than JAVA_OPTS since CATALINA_OPTS is only used on start whereas JAVA_OPTS is used on start and stop.
 
-# On your local machine: open http://129.146.152.161/Cars_Sample_App/home.do 
+# On your local machine: open http://129.146.154.191/Cars_Sample_App/home.do 
 # to see "Supercar trader" page
