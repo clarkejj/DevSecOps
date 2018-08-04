@@ -61,7 +61,9 @@ netstat -natp | grep $PID
 ## Configure JMX:
 cd $TOMCAT_HOME
 cd conf
-# TODO: in file 
+# Pull in file https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/AppD/setenv.sh)"
+wget -O setenv.sh "https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/AppD/setenv.sh)"
+chmod 755 setenv.sh
 #Catalina:type=JspMonitor,WebModule=//localhost/Cars_Sample_App,name=jsp,J2EEApplication=none,J2EEServer=none
 # Background: https://www.mulesoft.com/tcat/tomcat-catalina
 # https://tomcat.apache.org/tomcat-6.0-doc/monitoring.html
