@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # linux-install.sh
 
 # IP address from https://cloud.ravellosystems.com/#/hE4lpaLL58tqn8PCDbHOmBkRXrSEDh1kgFNIQHxZUqplcXcQBm7D2NnvFasm210X/apps/3125670382551/vms/?selectedIds=;6489016440455168
