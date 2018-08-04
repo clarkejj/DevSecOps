@@ -1,3 +1,4 @@
+#!/bin/bash
 # setenv.sh
 # This is for Tomcat v__
 # See https://geekflare.com/enable-jmx-tomcat-to-monitor-administer/
