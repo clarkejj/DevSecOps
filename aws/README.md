@@ -5,7 +5,78 @@ Variables in the file are detailed in <a target="_blank" href="https://docs.aws.
 
 https://github.com/aws/aws-cli
 
+http://jmespath.org/
+json --query 
+from  https://github.com/jmespath/jmespath.py 
+http://jamesls.com/how-to-easily-explore-jmespath-on-the-command-line.html
+
+## Sample AWS CLI scripts
+
+Shawn Woodford (in NYC) has a collection of bash shell scripts for automating various tasks with Amazon Web Services using the AWS CLI and jq at <a target="_blank" href="https://github.com/swoodford/aws">https://github.com/swoodford/aws</a>
+
+1. Run <tt>aws configure</tt>
+   to define in ~/.aws/config and ~/.aws/credentials
+
+2. Verify state by running <tt>ec2-list.sh</tt> which lists accounts and its regions, users, security groups, S3 buckets, VPCs.
+
+3. Create security groups.
+
+4. Create an S3 IAM user, generate IAM keys, add to IAM group, generate user policy
+   https://github.com/swoodford/aws/blob/master/iam-create-s3-users.sh
+
+5. Define VPC
+
+6. set up a new EC2 instance and ssh into it using: https://gist.github.com/Pablosan/803422
+
+
+## AWS EC2 User Data
+
+To specify actions when Ubuntu boots up with AWS EC2 instance, this is an example of what can be specified in the "User Data" section of the AWS EC2 Console:
+
+<pre>
+\#!/bin/bash
+yum update -y
+yum install -y httpd24 php56 mysql55-server php56-mysqlnd
+service httpd start
+chkconfig httpd on
+groupadd www
+usermod -a -G www ec2-user
+chown -R root:www /var/www
+chmod 2775 /var/www
+find /var/www -type d -exec chmod 2775 {} +
+find /var/www -type f -exec chmod 0664 {} +
+echo "&LT;?php phpinfo(); ?>" > /var/www/html/phpinfo.php
+</pre>
+
+This approach of specifying actions has several advantages over creating an Instance Snapshot on AWS:
+
+• I don't have to remember all the nit-picky details of getting a new instance up and configured
+• Every minute detail will happen the same way every time
+• The script serves as a reminder of every step taken to start and configure the instance
+• No AWS charges for Snapshot storage
+
+
+
+## Social
+
 https://forums.aws.amazon.com/forum.jspa?forumID=150
+
+## References
+
+* <a target="_blank" href="https://docs.aws.amazon.com/cli/latest/index.html">AWS CLI Command Reference</a> which has at the bottom of the list <a target="_blank" href="https://docs.aws.amazon.com/cli/latest/topic/index.html">Topic Guide</a> 
+
+https://docs.aws.amazon.com/cli/latest/userguide
+
+https://docs.aws.amazon.com/cli/latest/reference
+
+https://docs.aws.amazon.com/cli/latest/topic/s3-config.html#cli-aws-help-s3-config
+
+https://docs.aws.amazon.com/cli/latest/topic/s3-faq.html#cli-aws-help-s3-faq
+
+https://github.com/aws/aws-cli is where the code is kept
+
+Boto3 Talk
+
 
 ## Return Codes
 
@@ -26,34 +97,6 @@ Zero (0) is the normal return code. So check for non-zero.
 1 AWS S3 commands return if one or more S3 transfers failed.
 
 2 AWS returns if it cannot parse the previous command due to missing required subcommands or arguments or unknown commands or arguments.
-
-## Sample AWS CLI scripts
-
-https://github.com/swoodford/aws
-(from Shawn Woodford in NYC) contains a collection of bash shell scripts for automating various tasks with Amazon Web Services using the AWS CLI and jq.
-
-http://jmespath.org/
-json --query 
-from  https://github.com/jmespath/jmespath.py 
-http://jamesls.com/how-to-easily-explore-jmespath-on-the-command-line.html
-
-## References
-
-* <a target="_blank" href="https://docs.aws.amazon.com/cli/latest/index.html">AWS CLI Command Reference</a> which has at the bottom of the list <a target="_blank" href="https://docs.aws.amazon.com/cli/latest/topic/index.html">Topic Guide</a> 
-
-https://docs.aws.amazon.com/cli/latest/userguide
-
-https://docs.aws.amazon.com/cli/latest/reference
-
-https://docs.aws.amazon.com/cli/latest/topic/s3-config.html#cli-aws-help-s3-config
-
-https://docs.aws.amazon.com/cli/latest/topic/s3-faq.html#cli-aws-help-s3-faq
-
-https://github.com/aws/aws-cli is where the code is kept
-
-Boto3 Talk
-
-
 ## YouTube Videos about AWS CLI
 
 James Saryerwinnie <js@jamesls.com>

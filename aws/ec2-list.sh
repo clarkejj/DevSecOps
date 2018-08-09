@@ -17,8 +17,12 @@ function fancy_echo() {
 fancy_echo "aws sts get-caller-identity ..."
 aws sts get-caller-identity
 
-fancy_echo "aws ec2 describe-regions --output text | cut -f 3 ..."
-aws ec2 describe-regions --output text | cut -f 3
+fancy_echo "aws ec2 describe-regions ..."
+#aws ec2 describe-regions --output text | cut -f 3
+AWS_REGIONS=$(aws ec2 describe-regions --query 'Regions[].RegionName' --output text)
+#echo "AWS_REGIONS=$AWS_REGIONS"
+#for R in $AWS_REGIONS ; do \
+#   echo $R; aws ec2 describe-id-format --region $R --output text; done
 
 fancy_echo "aws configure get region ..."
 AWS_REGION=$(aws configure get region)
@@ -60,6 +64,11 @@ aws ec2 describe-vpcs --query 'Vpcs[?VpcId == "$VPC_INSTANCE"].CidrBlock'
    #[
    #    "10.0.0.0/16"
    # ]
+
+fancy_echo " Find all instances without a specific tag / with a specific tag ..."
+# From https://gist.github.com/sebsto/eb48357f0bb24db8b2bf
+aws ec2 describe-instances --query 'Reservations[?Instances[?length(Tags[?Key==`Environment`]) == `0`]].Instances[].InstanceId'
+aws ec2 describe-instances --query 'Reservations[?Instances[?Tags[?Key==`Environment`]]].Instances[].InstanceId'
 
 exit
 

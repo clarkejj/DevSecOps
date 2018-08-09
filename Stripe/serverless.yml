@@ -1,0 +1,24 @@
+service: serverless-checkout # NOTE: update this with your service name
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: prod
+  memorySize: 256
+
+package:
+  include:
+    - node_modules/square-connect/**
+    - node_modules/superagent/**
+  excludeDevDependencies: true
+
+functions:
+  checkout:
+    environment:
+      ACCESS_TOKEN: YOUR_ACCESS_TOKEN
+      LOCATION_ID: YOUR_LOCATION_ID
+    handler: handler.checkout
+    events:
+      - http:
+          path: /checkout
+          method: any

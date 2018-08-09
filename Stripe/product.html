@@ -1,0 +1,32 @@
+<!-- start product -->
+<div class='product'>
+    <div class='imageContainer'>
+        <img class='productImage' src="/product1.jpeg" />
+        <div class='imageOverlay'>
+            <button>View Details</button>
+        </div>
+    </div>
+    <div class='modal clearfix'>
+        <button class='close'>Close</button>
+        <img class='modalImage' src="/product1.jpeg" />
+        <div class='productInfo'>
+            <h2 class='productTitle'>Back to Square 1 Sticker</h2>
+            <p class='productDescription'>"If only 88 was a perfect Square..."</p>
+            <div class='productMeta'>
+                <h2 class='productCost'>
+                    <span class='green'>$1.00</span>*
+                </h2>
+
+                <!-- insert product cost here -->
+                <span class='helperText'>*We're not actually going to charge you.</span>
+                <form action='https://UNIQUE_ID.execute-api.us-east-1.amazonaws.com/prod/checkout' method='post'>
+                    <input name='itemVarID' type='hidden' value="IBXSHR4PIMEAHHSOAKNBC5PQ" style='display: none' />
+                    <input name='price' type='hidden' value="100" style='display: none' />
+                    <input name='name' type='hidden' value="Back to Square 1 Sticker" style='display: none' />
+                    <button type='submit' class='productPurchase'>Buy This</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end product -->
