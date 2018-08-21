@@ -2,7 +2,8 @@
 
 # This is mac-install.sh from https://github.com/wilsonmar/DevSecOps/Kakunin
 
-# Based on https://www.slideshare.net/thesoftwarehouse/kakunin-e2e-framework-showcase
+# Based on https://thesoftwarehouse.github.io/Kakunin/
+# https://www.slideshare.net/thesoftwarehouse/kakunin-e2e-framework-showcase
 # https://github.com/TheSoftwareHouse/Kakunin  for code
 # https://thesoftwarehouse.github.io/Kakunin/  for documentation
 # http://kakunin.io/
@@ -49,22 +50,33 @@ fi
 
 ### install pre-requisites
 
-   npm install webdriver-manager
-   npm install protractor
+   npm install cross-env  --save
+   npm install webdriver-manager --save
+   npm install protractor --save
 
 ### Install Kakunin CLI locally because it's experimental:
    module="kakunin"
       fancy_echo "Installing $module ..."
-      npm install $module # added 216 packages from 330 contributors and audited 1438 packages in 25.576s
+      npm install $module  --save # added 216 packages from 330 contributors and audited 1438 packages in 25.576s
    npm list "$module"  # kakunin@2.1.3 on 21 Aug 2018
 
 ### Install Kakunin CLI locally because it's experimental:
    fancy_echo "Running $module init ..."
    npm run kakunin init
+
+   # Answer what kind of app you're going to test (default: AngularJS) 
+   # Enter URL where your tested app will be running (default: http://localhost:3000) 
+   # Choose if you plan to use some emails checking service (default: none)
+
    fancy_echo "Verifying $module init ..."
    ls -al
+
 exit
 
+### Run the tests using Kakunin:
+   npm run kakunin
+
+exit
 
    # Kill kakunin process if it's still running from previous run:
    PID="$(ps -A | grep -m1 'kakunin' | grep -v "grep" | awk '{print $1}')"
