@@ -9,7 +9,7 @@
 # http://kakunin.io/
 
 # This bash script downloads and installs kakunin test rig:
-# sh -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/mac-install.sh)"
+# sh -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/kakunin-install.sh)"
 
 # This is free software; see the source for copying conditions. There is NO
 # warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -23,8 +23,6 @@ function fancy_echo() {
 TIME_START="$(date -u +%s)"
 FREE_DISKBLOCKS_START="$(df | sed -n -e '2{p;q}' | cut -d' ' -f 6)"
 
-
-### Create a container folder based on attribute
 
             KAKUNIN_PROJECT="$1"  # from 1st argument
 if [[ -z "${KAKUNIN_PROJECT// }"  ]]; then  #it's blank so assign default:
