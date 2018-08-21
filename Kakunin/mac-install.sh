@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash 
+#!/bin/bash
 
 # This is mac-install.sh from https://github.com/wilsonmar/DevSecOps/Kakunin
 
