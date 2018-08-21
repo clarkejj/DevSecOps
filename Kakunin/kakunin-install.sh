@@ -31,6 +31,16 @@ if [[ -z "${KAKUNIN_PROJECT// }"  ]]; then  #it's blank so assign default:
             KAKUNIN_PROJECT="kakunin-workshop"
 fi
 
+# Kill kakunin process if it's still running from previous run:
+   PID="$(ps -A | grep -m1 $KAKUNIN_PROJECT | grep -v "grep" | awk '{print $1}')"
+      if [ ! -z "$PID" ]; then # found:
+         ps -A | grep -m1 $KAKUNIN_PROJECT
+         fancy_echo "kakunin process already running on PID=$PID. killing it ..."
+         kill $PID
+      else
+         fancy_echo "kakunin process NOT running ..."
+      fi
+
 ### Cleanup from previous run:
 
    ### Delete container folder from previous run (or it will cause error), thus the container:
@@ -54,8 +64,11 @@ fi
 ### install pre-requisites
 
    npm install cross-env  --save
+       # added 10 packages from 8 contributors and audited 10 packages in 2.04s
    npm install webdriver-manager --save
+       # added 87 packages from 114 contributors and audited 164 packages in 4.464s
    npm install protractor --save
+       # added 38 packages from 83 contributors and audited 454 packages in 3.474s
 
 ### Install Kakunin CLI locally because it's experimental:
    module="kakunin"
@@ -82,11 +95,15 @@ ANSWERS
    fancy_echo "List tree after init ..."
    tree >tree.after.init.txt
 
-   fancy_echo "Copying kakunin.conf.js and others from /functional-tests ..."
+  fancy_echo "Copying kakunin.conf.js and others from /functional-tests ..."
    cp -r node_modules/kakunin/functional-tests/ .
       # for features folder, kakunin.conf.js
 
-   fancy_echo "Linking from dist/step_definitions ..."
+   # To avoid Directory /Users/wilsonmar/kakunin-workshop/matchers does not exist.
+  fancy_echo "Copying matchers, generators, etc. from /features ..."
+  cp -r node_modules/kakunin/features/ .
+
+   fancy_echo "Linking from dist/step_definitions (see docs) ..."
    ls node_modules/kakunin/dist/step_definitions/
 ln -s node_modules/kakunin/dist/step_definitions/elements.js kakunin-elements.js
 ln -s node_modules/kakunin/dist/step_definitions/debug.js kakunin-debug.js
@@ -105,15 +122,12 @@ ln -s node_modules/kakunin/dist/step_definitions/navigation.js kakunin-navigatio
       # data              emails            generators        matchers          package.json      reports
       # dictionaries      features          hooks             node_modules      pages             step_definitions
 
+#   fancy_echo "Change disk to node_modules/Kakunin ..."
+#   cd node_modules/kakunin
+#         echo "PWD=$PWD"
+
    fancy_echo "Updating webdriver-manager to avoid error message ..."
    webdriver-manager update
-
-   # Kill kakunin process if it's still running from previous run:
-   PID="$(ps -A | grep -m1 'kakunin' | grep -v "grep" | awk '{print $1}')"
-      if [ ! -z "$PID" ]; then 
-         fancy_echo "kakunin running on PID=$PID. killing it ..."
-         kill $PID
-      fi
 
 ### Run the tests using Kakunin:
    fancy_echo "Running npm run kakunin ..."
