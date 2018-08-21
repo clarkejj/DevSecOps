@@ -20,6 +20,9 @@ function fancy_echo() {
    # shellcheck disable=SC2059
    printf "\\n>>> $fmt\\n" "$@"
 }
+TIME_START="$(date -u +%s)"
+FREE_DISKBLOCKS_START="$(df | sed -n -e '2{p;q}' | cut -d' ' -f 6)"
+
 
 ### Create a container folder based on attribute
 
@@ -62,19 +65,40 @@ fi
 
 ### Install Kakunin CLI locally because it's experimental:
    fancy_echo "Running $module init ..."
-   npm run kakunin init
-
-   # Answer what kind of app you're going to test (default: AngularJS) 
+   npm run kakunin init <<ANSWERS
+3
+http://localhost:3000
+none
+ANSWERS
+   # Answer what kind of app you're going to test (default: AngularJS) 3 for other.
    # Enter URL where your tested app will be running (default: http://localhost:3000) 
-   # Choose if you plan to use some emails checking service (default: none)
+   # What kind of email service checking service (default: none)
 
    fancy_echo "Verifying $module init ..."
    ls -al
+      # comparators       downloads         form_handlers     kakunin.conf.js   package-lock.json regexes           transformers
+      # data              emails            generators        matchers          package.json      reports
+      # dictionaries      features          hooks             node_modules      pages             step_definitions
 
-exit
+   # To avoid errors:
+   webdriver-manager update
 
 ### Run the tests using Kakunin:
    npm run kakunin
+      # Selenium standalone server started at http://192.168.0.190:64586/wd/hub
+      # WAIT for pause after I/update - chromedriver: setting permissions to 0755 for /Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/chromedriver_2.41
+
+FREE_DISKBLOCKS_END=$(df | sed -n -e '2{p;q}' | cut -d' ' -f 6) 
+DIFF=$(((FREE_DISKBLOCKS_START-FREE_DISKBLOCKS_END)/2048))
+fancy_echo "$DIFF MB of disk space consumed during this script run."
+# 380691344 / 182G = 2091710.681318681318681 blocks per GB
+# 182*1024=186368 MB
+# 380691344 / 186368 G = 2042 blocks per MB
+
+TIME_END=$(date -u +%s);
+DIFF=$((TIME_END-TIME_START))
+             MSG="End of script $THISPGM after $((DIFF/60))m $((DIFF%60))s seconds elapsed."
+fancy_echo "$MSG"
 
 exit
 
