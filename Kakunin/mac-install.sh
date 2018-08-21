@@ -53,9 +53,7 @@ fi
    # instead of npm init new, copy in:
       DOWNLOAD_URL="https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/package.json"
       echo "Downloading $DOWNLOAD_URL ..."
-      curl -O "$DOWNLOAD_URL" 
-         # 2>/dev/null to  ignore curl: (3) <url> malformed
-      ls "$PACT_HOME"
+      curl -O "$DOWNLOAD_URL"   # 208 bytes
 
 ### install pre-requisites
 
