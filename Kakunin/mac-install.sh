@@ -44,14 +44,18 @@ fi
             fancy_echo "Deleting container folder: $KAKUNIN_PROJECT ..."
             rm -rf "$KAKUNIN_PROJECT"
          fi
-         # Create container folder again:
+         fancy_echo "Creating container folder: $KAKUNIN_PROJECT ..."
          mkdir "$KAKUNIN_PROJECT" && cd "$KAKUNIN_PROJECT"
          fancy_echo "PWD=$PWD"
-touch hello
-exit
+   touch hello-kakunin
+
 ### Initialize project:
    # instead of npm init new, copy in:
-   #TODO: curl package.json .
+      DOWNLOAD_URL="https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/package.json"
+      echo "Downloading $DOWNLOAD_URL ..."
+      curl -O "$DOWNLOAD_URL" 
+         # 2>/dev/null to  ignore curl: (3) <url> malformed
+      ls "$PACT_HOME"
 
 ### install pre-requisites
 
