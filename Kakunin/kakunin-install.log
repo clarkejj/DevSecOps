@@ -8,27 +8,27 @@ $ ./kakunin-install.sh
 Downloading https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/package.json ...
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100   253  100   253    0     0    653      0 --:--:-- --:--:-- --:--:--   653
+100   253  100   253    0     0    840      0 --:--:-- --:--:-- --:--:--   837
 npm notice created a lockfile as package-lock.json. You should commit this file.
 npm WARN workshop@0.0.1 No description
 npm WARN workshop@0.0.1 No repository field.
 
 + cross-env@5.2.0
-added 10 packages from 8 contributors and audited 10 packages in 1.84s
+added 10 packages from 8 contributors and audited 10 packages in 0.899s
 found 0 vulnerabilities
 
 npm WARN workshop@0.0.1 No description
 npm WARN workshop@0.0.1 No repository field.
 
 + webdriver-manager@12.1.0
-added 87 packages from 114 contributors and audited 164 packages in 3.915s
+added 87 packages from 114 contributors and audited 164 packages in 2.099s
 found 0 vulnerabilities
 
 npm WARN workshop@0.0.1 No description
 npm WARN workshop@0.0.1 No repository field.
 
 + protractor@5.4.0
-added 38 packages from 83 contributors and audited 454 packages in 3.704s
+added 38 packages from 83 contributors and audited 454 packages in 1.971s
 found 0 vulnerabilities
 
 
@@ -41,27 +41,51 @@ found 0 vulnerabilities
 > kakunin@2.1.3 postinstall /Users/wilsonmar/kakunin-workshop/node_modules/kakunin
 > webdriver-manager update
 
-[08:03:13] I/file_manager - creating folder /Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium
-[08:03:13] I/config_source - curl -o/Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/standalone-response.xml https://selenium-release.storage.googleapis.com/
-[08:03:13] I/config_source - curl -o/Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/chrome-response.xml https://chromedriver.storage.googleapis.com/
-[08:03:13] I/config_source - curl -o/Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/gecko-response.json https://api.github.com/repos/mozilla/geckodriver/releases
-[08:03:14] I/downloader - curl -o/Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/chromedriver_2.41.zip https://chromedriver.storage.googleapis.com/2.41/chromedriver_mac64.zip
-[08:03:14] I/downloader - curl -o/Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/selenium-server-standalone-3.14.0.jar https://selenium-release.storage.googleapis.com/3.14/selenium-server-standalone-3.14.0.jar
-[08:03:16] I/downloader - curl -o/Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/geckodriver-v0.21.0.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.21.0/geckodriver-v0.21.0-macos.tar.gz
-[08:03:23] I/update - chromedriver: unzipping chromedriver_2.41.zip
-[08:03:23] I/update - chromedriver: setting permissions to 0755 for /Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/chromedriver_2.41
-[08:03:29] I/update - geckodriver: unzipping geckodriver-v0.21.0.tar.gz
-[08:03:29] I/update - geckodriver: setting permissions to 0755 for /Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/geckodriver-v0.21.0
+[09:58:04] I/file_manager - creating folder /Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium
+[09:58:04] I/config_source - curl -o/Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/standalone-response.xml https://selenium-release.storage.googleapis.com/
+[09:58:04] I/config_source - curl -o/Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/chrome-response.xml https://chromedriver.storage.googleapis.com/
+[09:58:04] I/config_source - curl -o/Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/gecko-response.json https://api.github.com/repos/mozilla/geckodriver/releases
+[09:58:05] I/downloader - curl -o/Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/chromedriver_2.41.zip https://chromedriver.storage.googleapis.com/2.41/chromedriver_mac64.zip
+[09:58:05] I/downloader - curl -o/Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/selenium-server-standalone-3.14.0.jar https://selenium-release.storage.googleapis.com/3.14/selenium-server-standalone-3.14.0.jar
+[09:58:09] I/downloader - curl -o/Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/geckodriver-v0.21.0.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.21.0/geckodriver-v0.21.0-macos.tar.gz
+[09:58:12] I/update - chromedriver: unzipping chromedriver_2.41.zip
+[09:58:12] I/update - chromedriver: setting permissions to 0755 for /Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/chromedriver_2.41
+[09:58:18] I/update - geckodriver: unzipping geckodriver-v0.21.0.tar.gz
+[09:58:18] I/update - geckodriver: setting permissions to 0755 for /Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/geckodriver-v0.21.0
 npm WARN workshop@0.0.1 No description
 npm WARN workshop@0.0.1 No repository field.
 
 + kakunin@2.1.3
-added 216 packages from 330 contributors and audited 1448 packages in 25.72s
+added 216 packages from 330 contributors and audited 1448 packages in 27.664s
 found 2 high severity vulnerabilities
   run `npm audit fix` to fix them, or `npm audit` for details
 workshop@0.0.1 /Users/wilsonmar/kakunin-workshop
 └── kakunin@2.1.3 
 
+
+>>> Listing node_modules/kakunin ...
+total 88
+drwxr-xr-x   21 wilsonmar  staff   672 Aug 21 09:58 .
+drwxr-xr-x  297 wilsonmar  staff  9504 Aug 21 09:58 ..
+-rw-r--r--    1 wilsonmar  staff   146 Oct 26  1985 .babelrc
+-rw-r--r--    1 wilsonmar  staff   180 Oct 26  1985 .editorconfig
+-rw-r--r--    1 wilsonmar  staff   394 Oct 26  1985 .eslintrc.js
+-rw-r--r--    1 wilsonmar  staff  2960 Oct 26  1985 CHANGELOG.MD
+-rw-r--r--    1 wilsonmar  staff  4037 Oct 26  1985 CONTRIBUTING.MD
+-rw-r--r--    1 wilsonmar  staff  1075 Oct 26  1985 LICENSE
+-rw-r--r--    1 wilsonmar  staff  2101 Oct 26  1985 MIGRATION-2.0.MD
+-rw-r--r--    1 wilsonmar  staff  1402 Oct 26  1985 ROADMAP.MD
+drwxr-xr-x   17 wilsonmar  staff   544 Aug 21 09:58 dist
+drwxr-xr-x   15 wilsonmar  staff   480 Aug 21 09:58 docs
+drwxr-xr-x   11 wilsonmar  staff   352 Aug 21 09:58 docs-src
+drwxr-xr-x    4 wilsonmar  staff   128 Aug 21 09:58 docs-theme
+drwxr-xr-x   11 wilsonmar  staff   352 Aug 21 09:58 functional-tests
+-rw-r--r--    1 wilsonmar  staff   979 Oct 26  1985 mkdocs.yml
+drwxr-xr-x   18 wilsonmar  staff   576 Aug 21 09:58 node_modules
+-rw-r--r--    1 wilsonmar  staff  3823 Aug 21 09:58 package.json
+-rw-r--r--    1 wilsonmar  staff  2668 Oct 26  1985 readme.md
+drwxr-xr-x   17 wilsonmar  staff   544 Aug 21 09:58 src
+drwxr-xr-x   10 wilsonmar  staff   320 Aug 21 09:58 templates
 
 >>> Running kakunin init ...
 
@@ -70,56 +94,73 @@ workshop@0.0.1 /Users/wilsonmar/kakunin-workshop
 
 ? What kind of application would you like to test? otherWeb
 ? What is base url? [http://localhost:3000] 
+>>> List tree after init ...
+
+>>> Copying kakunin.conf.js and others from /functional-tests ...
+
+>>> Linking from dist/step_definitions ...
+debug.js       elements.js    email.js       file.js        form.js        generators.js  navigation.js  performance.js
+
 >>> Listing kakunin folder ...
-total 208
-drwxr-xr-x    5 wilsonmar  staff    160 Aug 21 08:03 .
-drwxr-xr-x+ 150 wilsonmar  staff   4800 Aug 21 08:02 ..
-drwxr-xr-x  297 wilsonmar  staff   9504 Aug 21 08:03 node_modules
--rw-r--r--    1 wilsonmar  staff  99095 Aug 21 08:03 package-lock.json
--rw-r--r--    1 wilsonmar  staff    394 Aug 21 08:03 package.json
+total 1112
+drwxr-xr-x   14 wilsonmar  staff     448 Aug 21 09:58 .
+drwxr-xr-x+ 150 wilsonmar  staff    4800 Aug 21 09:57 ..
+lrwxr-xr-x    1 wilsonmar  staff      51 Aug 21 09:58 kakunin-debug.js -> node_modules/kakunin/dist/step_definitions/debug.js
+lrwxr-xr-x    1 wilsonmar  staff      54 Aug 21 09:58 kakunin-elements.js -> node_modules/kakunin/dist/step_definitions/elements.js
+lrwxr-xr-x    1 wilsonmar  staff      51 Aug 21 09:58 kakunin-email.js -> node_modules/kakunin/dist/step_definitions/email.js
+lrwxr-xr-x    1 wilsonmar  staff      50 Aug 21 09:58 kakunin-file.js -> node_modules/kakunin/dist/step_definitions/file.js
+lrwxr-xr-x    1 wilsonmar  staff      50 Aug 21 09:58 kakunin-form.js -> node_modules/kakunin/dist/step_definitions/form.js
+lrwxr-xr-x    1 wilsonmar  staff      56 Aug 21 09:58 kakunin-generators.js -> node_modules/kakunin/dist/step_definitions/generators.js
+lrwxr-xr-x    1 wilsonmar  staff      56 Aug 21 09:58 kakunin-navigation.js -> node_modules/kakunin/dist/step_definitions/navigation.js
+-rw-r--r--    1 wilsonmar  staff    1348 Aug 21 09:58 kakunin.conf.js
+drwxr-xr-x  297 wilsonmar  staff    9504 Aug 21 09:58 node_modules
+-rw-r--r--    1 wilsonmar  staff   99095 Aug 21 09:58 package-lock.json
+-rw-r--r--    1 wilsonmar  staff     910 Aug 21 09:58 package.json
+-rw-r--r--    1 wilsonmar  staff  456526 Aug 21 09:58 tree.after.init.txt
 
 >>> Updating webdriver-manager to avoid error message ...
-[08:03:31] I/update - chromedriver: file exists /usr/local/lib/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.41.zip
-[08:03:31] I/update - chromedriver: unzipping chromedriver_2.41.zip
-[08:03:31] I/update - chromedriver: setting permissions to 0755 for /usr/local/lib/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.41
-[08:03:31] I/update - chromedriver: chromedriver_2.41 up to date
-[08:03:31] I/update - selenium standalone: file exists /usr/local/lib/node_modules/protractor/node_modules/webdriver-manager/selenium/selenium-server-standalone-3.14.0.jar
-[08:03:31] I/update - selenium standalone: selenium-server-standalone-3.14.0.jar up to date
-[08:03:32] I/update - geckodriver: file exists /usr/local/lib/node_modules/protractor/node_modules/webdriver-manager/selenium/geckodriver-v0.21.0.tar.gz
-[08:03:32] I/update - geckodriver: unzipping geckodriver-v0.21.0.tar.gz
-[08:03:32] I/update - geckodriver: setting permissions to 0755 for /usr/local/lib/node_modules/protractor/node_modules/webdriver-manager/selenium/geckodriver-v0.21.0
-[08:03:32] I/update - geckodriver: geckodriver-v0.21.0 up to date
+[09:58:30] I/update - chromedriver: file exists /usr/local/lib/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.41.zip
+[09:58:30] I/update - chromedriver: unzipping chromedriver_2.41.zip
+[09:58:30] I/update - chromedriver: setting permissions to 0755 for /usr/local/lib/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.41
+[09:58:30] I/update - chromedriver: chromedriver_2.41 up to date
+[09:58:30] I/update - selenium standalone: file exists /usr/local/lib/node_modules/protractor/node_modules/webdriver-manager/selenium/selenium-server-standalone-3.14.0.jar
+[09:58:30] I/update - selenium standalone: selenium-server-standalone-3.14.0.jar up to date
+[09:58:31] I/update - geckodriver: file exists /usr/local/lib/node_modules/protractor/node_modules/webdriver-manager/selenium/geckodriver-v0.21.0.tar.gz
+[09:58:31] I/update - geckodriver: unzipping geckodriver-v0.21.0.tar.gz
+[09:58:31] I/update - geckodriver: setting permissions to 0755 for /usr/local/lib/node_modules/protractor/node_modules/webdriver-manager/selenium/geckodriver-v0.21.0
+[09:58:31] I/update - geckodriver: geckodriver-v0.21.0 up to date
 
 >>> Running npm run kakunin ...
 
-> workshop@0.0.1 kakunin /Users/wilsonmar/kakunin-workshop
+> kakunin-functional-tests@1.0.0 kakunin /Users/wilsonmar/kakunin-workshop
 > cross-env NODE_ENV=prod kakunin
 
-[08:03:33] E/configParser - Error code: 105
-[08:03:33] E/configParser - Error message: failed loading configuration file ./node_modules/kakunin/dist/protractor.conf.js
-[08:03:33] E/configParser - Error: Cannot find module '/Users/wilsonmar/kakunin-workshop/kakunin.conf.js'
-    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:581:15)
-    at Function.Module._load (internal/modules/cjs/loader.js:507:25)
-    at Module.require (internal/modules/cjs/loader.js:637:17)
-    at require (internal/modules/cjs/helpers.js:20:18)
-    at Object.<anonymous> (/Users/wilsonmar/kakunin-workshop/node_modules/kakunin/dist/helpers/config.helper.js:23:12)
-    at Module._compile (internal/modules/cjs/loader.js:689:30)
-    at Object.Module._extensions..js (internal/modules/cjs/loader.js:700:10)
-    at Module.load (internal/modules/cjs/loader.js:599:32)
-    at tryModuleLoad (internal/modules/cjs/loader.js:538:12)
-    at Function.Module._load (internal/modules/cjs/loader.js:530:3)
+[09:58:32] W/configParser - pattern /Users/wilsonmar/kakunin-workshop/features/**/*.feature did not match any files.
+[09:58:32] E/launcher - Spec patterns did not match any files.
+[09:58:32] E/launcher - Error: Spec patterns did not match any files.
+    at Runner.run (/Users/wilsonmar/kakunin-workshop/node_modules/protractor/built/runner.js:322:19)
+    at TaskRunner.run (/Users/wilsonmar/kakunin-workshop/node_modules/protractor/built/taskRunner.js:110:27)
+    at createNextTaskRunner (/Users/wilsonmar/kakunin-workshop/node_modules/protractor/built/launcher.js:235:28)
+    at helper.runFilenameOrFn_.then.then.then (/Users/wilsonmar/kakunin-workshop/node_modules/protractor/built/launcher.js:260:13)
+    at _fulfilled (/Users/wilsonmar/kakunin-workshop/node_modules/protractor/node_modules/q/q.js:834:54)
+    at /Users/wilsonmar/kakunin-workshop/node_modules/protractor/node_modules/q/q.js:863:30
+    at Promise.promise.promiseDispatch (/Users/wilsonmar/kakunin-workshop/node_modules/protractor/node_modules/q/q.js:796:13)
+    at /Users/wilsonmar/kakunin-workshop/node_modules/protractor/node_modules/q/q.js:604:44
+    at runSingle (/Users/wilsonmar/kakunin-workshop/node_modules/protractor/node_modules/q/q.js:137:13)
+    at flush (/Users/wilsonmar/kakunin-workshop/node_modules/protractor/node_modules/q/q.js:125:13)
+[09:58:32] E/launcher - Process exited with error code 199
 Protractor has finished
 npm ERR! code ELIFECYCLE
-npm ERR! errno 105
-npm ERR! workshop@0.0.1 kakunin: `cross-env NODE_ENV=prod kakunin`
-npm ERR! Exit status 105
+npm ERR! errno 199
+npm ERR! kakunin-functional-tests@1.0.0 kakunin: `cross-env NODE_ENV=prod kakunin`
+npm ERR! Exit status 199
 npm ERR! 
-npm ERR! Failed at the workshop@0.0.1 kakunin script.
+npm ERR! Failed at the kakunin-functional-tests@1.0.0 kakunin script.
 npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
 
 npm ERR! A complete log of this run can be found in:
-npm ERR!     /Users/wilsonmar/.npm/_logs/2018-08-21T14_03_33_474Z-debug.log
+npm ERR!     /Users/wilsonmar/.npm/_logs/2018-08-21T15_58_32_579Z-debug.log
 
->>> 114 MB of disk space consumed during this script run.
+>>> -3 MB of disk space consumed during this script run.
 
->>> End of script  after 0m 43s seconds elapsed.
+>>> End of script  after 0m 41s seconds elapsed.

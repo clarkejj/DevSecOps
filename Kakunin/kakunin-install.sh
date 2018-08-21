@@ -63,6 +63,11 @@ fi
       npm install $module  --save # added 216 packages from 330 contributors and audited 1438 packages in 25.576s
    npm list "$module"  # kakunin@2.1.3 on 21 Aug 2018
 
+   fancy_echo "Listing node_modules/$module ..."
+   ls -al node_modules/kakunin
+      # CHANGELOG.MD     LICENSE          ROADMAP.MD       docs             docs-theme       mkdocs.yml       package.json     src
+      # CONTRIBUTING.MD  MIGRATION-2.0.MD dist             docs-src         functional-tests node_modules     readme.md        templates
+
 ### Install Kakunin CLI locally because it's experimental:
    fancy_echo "Running $module init ..."
    npm run kakunin init <<ANSWERS
@@ -73,6 +78,26 @@ ANSWERS
    # Answer what kind of app you're going to test (default: AngularJS) 3 for other.
    # Enter URL where your tested app will be running (default: http://localhost:3000) 
    # What kind of email service checking service (default: none)
+
+   fancy_echo "List tree after init ..."
+   tree >tree.after.init.txt
+
+   fancy_echo "Copying kakunin.conf.js and others from /functional-tests ..."
+   cp node_modules/kakunin/functional-tests/*.* .
+   # kakunin.conf.js
+
+   fancy_echo "Linking from dist/step_definitions ..."
+   ls node_modules/kakunin/dist/step_definitions/
+ln -s node_modules/kakunin/dist/step_definitions/elements.js kakunin-elements.js
+ln -s node_modules/kakunin/dist/step_definitions/debug.js kakunin-debug.js
+ln -s node_modules/kakunin/dist/step_definitions/file.js kakunin-file.js
+ln -s node_modules/kakunin/dist/step_definitions/form.js kakunin-form.js
+ln -s node_modules/kakunin/dist/step_definitions/email.js kakunin-email.js
+ln -s node_modules/kakunin/dist/step_definitions/generators.js kakunin-generators.js
+ln -s node_modules/kakunin/dist/step_definitions/navigation.js kakunin-navigation.js 
+
+#   fancy_echo "Opening localhost:3000 ..."
+#   open http://localhost:3000
 
    fancy_echo "Listing $module folder ..."
    ls -al
@@ -89,6 +114,7 @@ ANSWERS
       # Selenium standalone server started at http://192.168.0.190:64586/wd/hub
       # WAIT for pause after I/update - chromedriver: setting permissions to 0755 for /Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/chromedriver_2.41
 
+### Ending:
 FREE_DISKBLOCKS_END=$(df | sed -n -e '2{p;q}' | cut -d' ' -f 6) 
 DIFF=$(((FREE_DISKBLOCKS_START-FREE_DISKBLOCKS_END)/2048))
 fancy_echo "$DIFF MB of disk space consumed during this script run."
