@@ -74,16 +74,17 @@ ANSWERS
    # Enter URL where your tested app will be running (default: http://localhost:3000) 
    # What kind of email service checking service (default: none)
 
-   fancy_echo "Verifying $module init ..."
+   fancy_echo "Listing $module folder ..."
    ls -al
       # comparators       downloads         form_handlers     kakunin.conf.js   package-lock.json regexes           transformers
       # data              emails            generators        matchers          package.json      reports
       # dictionaries      features          hooks             node_modules      pages             step_definitions
 
-   # To avoid errors:
+   fancy_echo "Updating webdriver-manager to avoid error message ..."
    webdriver-manager update
 
 ### Run the tests using Kakunin:
+   fancy_echo "Running npm run kakunin ..."
    npm run kakunin
       # Selenium standalone server started at http://192.168.0.190:64586/wd/hub
       # WAIT for pause after I/update - chromedriver: setting permissions to 0755 for /Users/wilsonmar/kakunin-workshop/node_modules/webdriver-manager/selenium/chromedriver_2.41
