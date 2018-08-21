@@ -29,13 +29,6 @@ fi
 
 ### Cleanup from previous run:
 
-   # Kill kakunin process if it's still running from previous run:
-   PID="$(ps -A | grep -m1 'kakunin' | grep -v "grep" | awk '{print $1}')"
-      if [ ! -z "$PID" ]; then 
-         fancy_echo "kakunin running on PID=$PID. killing it ..."
-         kill $PID
-      fi
-
    ### Delete container folder from previous run (or it will cause error), thus the container:
    ### Download again, but things have probably changed anyway:
    cd ~/ 
@@ -47,7 +40,6 @@ fi
          fancy_echo "Creating container folder: $KAKUNIN_PROJECT ..."
          mkdir "$KAKUNIN_PROJECT" && cd "$KAKUNIN_PROJECT"
          fancy_echo "PWD=$PWD"
-   touch hello-kakunin
 
 ### Initialize project:
    # instead of npm init new, copy in:
@@ -63,10 +55,23 @@ fi
 ### Install Kakunin CLI locally because it's experimental:
    module="kakunin"
       fancy_echo "Installing $module ..."
-      npm install $module
+      npm install $module # added 216 packages from 330 contributors and audited 1438 packages in 25.576s
    npm list "$module"  # kakunin@2.1.3 on 21 Aug 2018
 
+### Install Kakunin CLI locally because it's experimental:
+   fancy_echo "Running $module init ..."
+   npm run kakunin init
+   fancy_echo "Verifying $module init ..."
+   ls -al
 exit
+
+
+   # Kill kakunin process if it's still running from previous run:
+   PID="$(ps -A | grep -m1 'kakunin' | grep -v "grep" | awk '{print $1}')"
+      if [ ! -z "$PID" ]; then 
+         fancy_echo "kakunin running on PID=$PID. killing it ..."
+         kill $PID
+      fi
 
 
 KAKUNIN_IP="$2"       # from 2nd argument
