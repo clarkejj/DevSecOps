@@ -83,8 +83,8 @@ ANSWERS
    tree >tree.after.init.txt
 
    fancy_echo "Copying kakunin.conf.js and others from /functional-tests ..."
-   cp node_modules/kakunin/functional-tests/*.* .
-   # kakunin.conf.js
+   cp -r node_modules/kakunin/functional-tests/ .
+      # for features folder, kakunin.conf.js
 
    fancy_echo "Linking from dist/step_definitions ..."
    ls node_modules/kakunin/dist/step_definitions/
@@ -108,6 +108,13 @@ ln -s node_modules/kakunin/dist/step_definitions/navigation.js kakunin-navigatio
    fancy_echo "Updating webdriver-manager to avoid error message ..."
    webdriver-manager update
 
+   # Kill kakunin process if it's still running from previous run:
+   PID="$(ps -A | grep -m1 'kakunin' | grep -v "grep" | awk '{print $1}')"
+      if [ ! -z "$PID" ]; then 
+         fancy_echo "kakunin running on PID=$PID. killing it ..."
+         kill $PID
+      fi
+
 ### Run the tests using Kakunin:
    fancy_echo "Running npm run kakunin ..."
    npm run kakunin
@@ -128,13 +135,6 @@ DIFF=$((TIME_END-TIME_START))
 fancy_echo "$MSG"
 
 exit
-
-   # Kill kakunin process if it's still running from previous run:
-   PID="$(ps -A | grep -m1 'kakunin' | grep -v "grep" | awk '{print $1}')"
-      if [ ! -z "$PID" ]; then 
-         fancy_echo "kakunin running on PID=$PID. killing it ..."
-         kill $PID
-      fi
 
 
 KAKUNIN_IP="$2"       # from 2nd argument
