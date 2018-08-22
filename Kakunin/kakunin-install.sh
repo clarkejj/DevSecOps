@@ -53,8 +53,8 @@ fi
             rm -rf "$KAKUNIN_PROJECT"
          fi
          fancy_echo "Creating container folder: $KAKUNIN_PROJECT ..."
-         # mkdir "$KAKUNIN_PROJECT"
-         git clone https://github.com/TheSoftwareHouse/Kakunin "$KAKUNIN_PROJECT"
+         mkdir "$KAKUNIN_PROJECT"
+         #git clone https://github.com/TheSoftwareHouse/Kakunin "$KAKUNIN_PROJECT"
          cd "$KAKUNIN_PROJECT"
          fancy_echo "PWD=$PWD"
 
@@ -87,17 +87,18 @@ fi
 ### Install Kakunin CLI locally because it's experimental:
    fancy_echo "Running $module init ..."
    npm run kakunin init
-#   npm run kakunin init <<ANSWERS
+#   npm run kakunin init << EOF
 #3
-#http://localhost:3000
+#http://todomvc.com
 #1
-#ANSWERS
+#EOF
    # Answer what kind of app you're going to test (default: AngularJS) 3 for other.
    # Enter URL where your tested app will be running (default: http://localhost:3000) 
    # What kind of email service checking service (default: none)
+   # NOTE: These answers show up in kakunin.conf.js generated.
 
-   fancy_echo "List tree after init ..."
-   tree >tree.after.init.txt
+#   fancy_echo "List tree after init ..."
+#   tree >tree.after.init.txt
 
    fancy_echo "Linking from dist/step_definitions (see docs) ..."
    ## For use in IDEs
@@ -110,8 +111,8 @@ ln -s node_modules/kakunin/dist/step_definitions/email.js kakunin-email.js
 ln -s node_modules/kakunin/dist/step_definitions/generators.js kakunin-generators.js
 ln -s node_modules/kakunin/dist/step_definitions/navigation.js kakunin-navigation.js 
 
-   fancy_echo "Listing $module folder ..."
-   ls -al
+ #  fancy_echo "Listing $module folder ..."
+ #  ls -al
       # comparators       downloads         form_handlers     kakunin.conf.js   package-lock.json regexes           transformers
       # data              emails            generators        matchers          package.json      reports
       # dictionaries      features          hooks             node_modules      pages             step_definitions
@@ -124,19 +125,24 @@ ln -s node_modules/kakunin/dist/step_definitions/navigation.js kakunin-navigatio
    webdriver-manager update
 
 ###
-   cd functional-tests
+#   cd functional-tests
 
-#   mkdir pages && cd pages
-#   DOWNLOAD_URL="https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/pages/main.js"
-#   echo "Downloading $DOWNLOAD_URL ..."
-#   curl -O "$DOWNLOAD_URL"   # 208 bytes
-#   cd ..
+   #mkdir pages 
+   cd pages
+   DOWNLOAD_URL="https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/pages/main.js"
+   echo "Downloading $DOWNLOAD_URL ..."
+   curl -O "$DOWNLOAD_URL"   # 208 bytes
+   cd ..
 
-#   mkdir features && cd features
-#   DOWNLOAD_URL="https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/features/adding_todo.feature"
-#   echo "Downloading $DOWNLOAD_URL ..."
-#   curl -O "$DOWNLOAD_URL"   # 208 bytes
-#   cd ..
+   #mkdir features 
+   cd features
+   DOWNLOAD_URL="https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/features/adding_todo.feature"
+   echo "Downloading $DOWNLOAD_URL ..."
+   curl -O "$DOWNLOAD_URL"   # 208 bytes
+   cd ..
+exit
+   fancy_echo "List tree before run ..."
+   tree >tree.before.run.txt
 
 ### Run the tests using Kakunin:
    fancy_echo "Running npm run kakunin ..."
