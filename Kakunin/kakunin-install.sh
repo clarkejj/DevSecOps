@@ -2,13 +2,16 @@
 
 # This is mac-install.sh from https://github.com/wilsonmar/DevSecOps/Kakunin
 
-# Based on https://thesoftwarehouse.github.io/Kakunin/
+# Based on https://thesoftwarehouse.github.io/Kakunin/quickstart/#install-packages
+# https://thesoftwarehouse.github.io/Kakunin/
 # https://www.slideshare.net/thesoftwarehouse/kakunin-e2e-framework-showcase
 # https://github.com/TheSoftwareHouse/Kakunin  for code
-# https://thesoftwarehouse.github.io/Kakunin/  for documentation
 # http://kakunin.io/
 
-# This bash script downloads and installs kakunin test rig:
+# This bash script downloads and installs kakunin test rig
+# and runs a test of sample app http://todomvc.com/examples/react/#/
+
+# Run by copying and pasting this line:
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/kakunin-install.sh)"
 
 # This is free software; see the source for copying conditions. There is NO
@@ -93,14 +96,6 @@ ANSWERS
    fancy_echo "List tree after init ..."
    tree >tree.after.init.txt
 
-  fancy_echo "Copying kakunin.conf.js and others from /functional-tests ..."
-   cp -r node_modules/kakunin/functional-tests/ .
-      # for features folder, kakunin.conf.js
-
-   # To avoid Directory /Users/wilsonmar/kakunin-workshop/matchers does not exist.
-  fancy_echo "Copying matchers, generators, etc. from /features ..."
-  cp -r node_modules/kakunin/features/ .
-
    fancy_echo "Linking from dist/step_definitions (see docs) ..."
    ls node_modules/kakunin/dist/step_definitions/
 ln -s node_modules/kakunin/dist/step_definitions/elements.js kakunin-elements.js
@@ -110,9 +105,6 @@ ln -s node_modules/kakunin/dist/step_definitions/form.js kakunin-form.js
 ln -s node_modules/kakunin/dist/step_definitions/email.js kakunin-email.js
 ln -s node_modules/kakunin/dist/step_definitions/generators.js kakunin-generators.js
 ln -s node_modules/kakunin/dist/step_definitions/navigation.js kakunin-navigation.js 
-
-#   fancy_echo "Opening localhost:3000 ..."
-#   open http://localhost:3000
 
    fancy_echo "Listing $module folder ..."
    ls -al
@@ -126,6 +118,19 @@ ln -s node_modules/kakunin/dist/step_definitions/navigation.js kakunin-navigatio
 
    fancy_echo "Updating webdriver-manager to avoid error message ..."
    webdriver-manager update
+
+###
+   mkdir pages && cd pages
+   DOWNLOAD_URL="https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/pages/main.js"
+   echo "Downloading $DOWNLOAD_URL ..."
+   curl -O "$DOWNLOAD_URL"   # 208 bytes
+   cd ..
+
+   mkdir features && cd features
+   DOWNLOAD_URL="https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/features/adding_todo.feature"
+   echo "Downloading $DOWNLOAD_URL ..."
+   curl -O "$DOWNLOAD_URL"   # 208 bytes
+   cd ..
 
 ### Run the tests using Kakunin:
    fancy_echo "Running npm run kakunin ..."
