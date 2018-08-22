@@ -1,0 +1,115 @@
+[
+  {
+    "keyword": "Feature",
+    "name": "",
+    "line": 1,
+    "id": "",
+    "tags": [],
+    "uri": "features/example.feature",
+    "elements": [
+      {
+        "id": ";",
+        "keyword": "Scenario",
+        "line": 2,
+        "name": "",
+        "tags": [],
+        "type": "scenario",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "node_modules/kakunin/dist/configuration/hooks.js:97"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "match": {
+              "location": "hooks/hook.js:6"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 3,
+            "name": "I visit the \"page\" page",
+            "match": {
+              "location": "node_modules/kakunin/dist/step_definitions/navigation.js:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1475
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 4,
+            "name": "I generate random \"name\" as \"myName\"",
+            "match": {
+              "location": "node_modules/kakunin/dist/step_definitions/generators.js:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 5,
+            "name": "my matcher \"e:name\" matches \"v:myName\"",
+            "match": {
+              "location": "step_definitions/steps.js:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 6,
+            "name": "my matcher \"e:name\" matches \"Bob\"",
+            "match": {
+              "location": "step_definitions/steps.js:6"
+            },
+            "result": {
+              "status": "passed"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "match": {
+              "location": "node_modules/kakunin/dist/configuration/hooks.js:87"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 22
+            }
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "browser": {
+        "name": "chrome",
+        "version": "68.0.3440.106"
+      },
+      "device": "",
+      "platform": {
+        "name": "",
+        "version": ""
+      }
+    }
+  }
+]

@@ -1,0 +1,195 @@
+{
+  "app": 0,
+  "customMetadata": false,
+  "customData": null,
+  "style": "style.css",
+  "displayDuration": false,
+  "browser": 1,
+  "name": "",
+  "version": "version",
+  "time": "2018-08-22T10:25:39.339Z",
+  "features": [
+    {
+      "metadata": {
+        "browser": {
+          "name": "chrome",
+          "version": "68.0.3440.106"
+        },
+        "device": "",
+        "platform": {
+          "name": "",
+          "version": ""
+        }
+      },
+      "keyword": "Feature",
+      "name": "",
+      "line": 1,
+      "id": "a2cc3c17-1cf7-401a-96d4-584efd3e6b28-",
+      "tags": [],
+      "uri": "features/example.feature",
+      "elements": [
+        {
+          "id": ";",
+          "keyword": "Scenario",
+          "line": 2,
+          "name": "",
+          "tags": [],
+          "type": "scenario",
+          "steps": [
+            {
+              "keyword": "Before",
+              "hidden": true,
+              "match": {
+                "location": "node_modules/kakunin/dist/configuration/hooks.js:97"
+              },
+              "result": {
+                "status": "passed"
+              }
+            },
+            {
+              "keyword": "Before",
+              "hidden": true,
+              "match": {
+                "location": "hooks/hook.js:6"
+              },
+              "result": {
+                "status": "passed"
+              }
+            },
+            {
+              "arguments": [],
+              "keyword": "When ",
+              "line": 3,
+              "name": "I visit the \"page\" page",
+              "match": {
+                "location": "node_modules/kakunin/dist/step_definitions/navigation.js:6"
+              },
+              "result": {
+                "status": "passed",
+                "duration": 1475
+              },
+              "time": "00:00:00.000"
+            },
+            {
+              "arguments": [],
+              "keyword": "And ",
+              "line": 4,
+              "name": "I generate random \"name\" as \"myName\"",
+              "match": {
+                "location": "node_modules/kakunin/dist/step_definitions/generators.js:14"
+              },
+              "result": {
+                "status": "passed",
+                "duration": 1
+              },
+              "time": "00:00:00.000"
+            },
+            {
+              "arguments": [],
+              "keyword": "Then ",
+              "line": 5,
+              "name": "my matcher \"e:name\" matches \"v:myName\"",
+              "match": {
+                "location": "step_definitions/steps.js:6"
+              },
+              "result": {
+                "status": "passed",
+                "duration": 1
+              },
+              "time": "00:00:00.000"
+            },
+            {
+              "arguments": [],
+              "keyword": "And ",
+              "line": 6,
+              "name": "my matcher \"e:name\" matches \"Bob\"",
+              "match": {
+                "location": "step_definitions/steps.js:6"
+              },
+              "result": {
+                "status": "passed"
+              }
+            },
+            {
+              "keyword": "After",
+              "hidden": true,
+              "match": {
+                "location": "node_modules/kakunin/dist/configuration/hooks.js:87"
+              },
+              "result": {
+                "status": "passed",
+                "duration": 22
+              }
+            }
+          ],
+          "passed": 4,
+          "failed": 0,
+          "notDefined": 0,
+          "skipped": 0,
+          "pending": 0,
+          "ambiguous": 0,
+          "duration": 1477,
+          "time": "00:00:00.000"
+        }
+      ],
+      "scenarios": {
+        "passed": 1,
+        "failed": 0,
+        "notDefined": 0,
+        "skipped": 0,
+        "pending": 0,
+        "ambiguous": 0,
+        "passedPercentage": "100.00",
+        "failedPercentage": "0.00",
+        "notdefinedPercentage": "0.00",
+        "skippedPercentage": "0.00",
+        "pendingPercentage": "0.00",
+        "ambiguousPercentage": "0.00",
+        "total": 1
+      },
+      "duration": 1477,
+      "time": "00:00:00.000",
+      "isFailed": false,
+      "isAmbiguous": false,
+      "isSkipped": false,
+      "isNotdefined": false,
+      "isPending": false,
+      "app": 0,
+      "browser": 0,
+      "passed": null,
+      "totalTime": null
+    }
+  ],
+  "featureCount": {
+    "ambiguous": 0,
+    "failed": 0,
+    "passed": 1,
+    "notDefined": 0,
+    "pending": 0,
+    "skipped": 0,
+    "total": 1,
+    "ambiguousPercentage": "0.00",
+    "failedPercentage": "0.00",
+    "notdefinedPercentage": "0.00",
+    "pendingPercentage": "0.00",
+    "skippedPercentage": "0.00",
+    "passedPercentage": "100.00"
+  },
+  "reportName": "Multiple Cucumber HTML Reporter",
+  "scenarios": {
+    "failed": 0,
+    "ambiguous": 0,
+    "notDefined": 0,
+    "pending": 0,
+    "skipped": 0,
+    "passed": 1,
+    "total": 1,
+    "ambiguousPercentage": "0.00",
+    "failedPercentage": "0.00",
+    "notdefinedPercentage": "0.00",
+    "passedPercentage": "100.00",
+    "pendingPercentage": "0.00",
+    "skippedPercentage": "0.00"
+  },
+  "totalTime": 0
+}
