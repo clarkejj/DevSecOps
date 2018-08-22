@@ -53,7 +53,9 @@ fi
             rm -rf "$KAKUNIN_PROJECT"
          fi
          fancy_echo "Creating container folder: $KAKUNIN_PROJECT ..."
-         mkdir "$KAKUNIN_PROJECT" && cd "$KAKUNIN_PROJECT"
+         # mkdir "$KAKUNIN_PROJECT"
+         git clone https://github.com/TheSoftwareHouse/Kakunin "$KAKUNIN_PROJECT"
+         cd "$KAKUNIN_PROJECT"
          fancy_echo "PWD=$PWD"
 
 ### Initialize project:
@@ -84,11 +86,12 @@ fi
 
 ### Install Kakunin CLI locally because it's experimental:
    fancy_echo "Running $module init ..."
-   npm run kakunin init <<ANSWERS
-3
-http://localhost:3000
-none
-ANSWERS
+   npm run kakunin init
+#   npm run kakunin init <<ANSWERS
+#3
+#http://localhost:3000
+#1
+#ANSWERS
    # Answer what kind of app you're going to test (default: AngularJS) 3 for other.
    # Enter URL where your tested app will be running (default: http://localhost:3000) 
    # What kind of email service checking service (default: none)
@@ -97,6 +100,7 @@ ANSWERS
    tree >tree.after.init.txt
 
    fancy_echo "Linking from dist/step_definitions (see docs) ..."
+   ## For use in IDEs
    ls node_modules/kakunin/dist/step_definitions/
 ln -s node_modules/kakunin/dist/step_definitions/elements.js kakunin-elements.js
 ln -s node_modules/kakunin/dist/step_definitions/debug.js kakunin-debug.js
@@ -120,17 +124,19 @@ ln -s node_modules/kakunin/dist/step_definitions/navigation.js kakunin-navigatio
    webdriver-manager update
 
 ###
-   mkdir pages && cd pages
-   DOWNLOAD_URL="https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/pages/main.js"
-   echo "Downloading $DOWNLOAD_URL ..."
-   curl -O "$DOWNLOAD_URL"   # 208 bytes
-   cd ..
+   cd functional-tests
 
-   mkdir features && cd features
-   DOWNLOAD_URL="https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/features/adding_todo.feature"
-   echo "Downloading $DOWNLOAD_URL ..."
-   curl -O "$DOWNLOAD_URL"   # 208 bytes
-   cd ..
+#   mkdir pages && cd pages
+#   DOWNLOAD_URL="https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/pages/main.js"
+#   echo "Downloading $DOWNLOAD_URL ..."
+#   curl -O "$DOWNLOAD_URL"   # 208 bytes
+#   cd ..
+
+#   mkdir features && cd features
+#   DOWNLOAD_URL="https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/features/adding_todo.feature"
+#   echo "Downloading $DOWNLOAD_URL ..."
+#   curl -O "$DOWNLOAD_URL"   # 208 bytes
+#   cd ..
 
 ### Run the tests using Kakunin:
    fancy_echo "Running npm run kakunin ..."
