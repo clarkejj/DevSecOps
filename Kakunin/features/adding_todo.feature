@@ -1,27 +1,10 @@
-'use strict';
+Feature:
 
-const { BasePage } = require('kakunin');
-
-class MainPage extends BasePage {
-    constructor() {
-        super();
-
-        // define the main url for the page
-        this.url = '/examples/react/#/';
-
-        // whole form tag
-        this.addTodoForm = $('.todoapp');
-
-        // input field
-        this.todoInput = $('input.new-todo');
-
-        // list of currently added todos
-        this.todos = $$('.todo-list .view');
-        this.todoLabel = by.css('label');
-
-        // first todo item in a list
-        this.firstTodoItem = this.todos.get(0);
-    }
-}
-
-module.exports = MainPage;
+    Scenario: Adding todo
+        Given I visit the "main" page
+        And I wait for "visibilityOf" of the "addTodoForm" element
+        And the "addTodoForm" element is visible
+        When I fill the "addTodoForm" form with:
+            | todoInput | My new todo |
+        And I press the "enter" key
+        Then there are "equal 1" "todos" elements

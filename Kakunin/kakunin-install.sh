@@ -127,6 +127,7 @@ ln -s node_modules/kakunin/dist/step_definitions/navigation.js kakunin-navigatio
 ###
 #   cd functional-tests
 
+   # From https://thesoftwarehouse.github.io/Kakunin/quickstart/#install-packages
    #mkdir pages 
    cd pages
    DOWNLOAD_URL="https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/pages/main.js"
