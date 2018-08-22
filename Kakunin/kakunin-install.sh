@@ -141,7 +141,7 @@ ln -s node_modules/kakunin/dist/step_definitions/navigation.js kakunin-navigatio
    echo "Downloading $DOWNLOAD_URL ..."
    curl -O "$DOWNLOAD_URL"   # 208 bytes
    cd ..
-exit
+
    fancy_echo "List tree before run ..."
    tree >tree.before.run.txt
 
