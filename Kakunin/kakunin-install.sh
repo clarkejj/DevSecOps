@@ -92,6 +92,11 @@ RUNTYPE="rerun"
       echo "Downloading $DOWNLOAD_URL ..."
       curl -O "$DOWNLOAD_URL"   # 208 bytes
 
+   # instead of npm init new, copy in:
+      DOWNLOAD_URL="https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/package.json"
+      echo "Downloading $DOWNLOAD_URL ..."
+      curl -O "$DOWNLOAD_URL"   # 208 bytes
+
 ### install pre-requisites
 
    npm install cross-env  --save
@@ -115,15 +120,10 @@ RUNTYPE="rerun"
 ### Install Kakunin CLI locally because it's experimental:
    fancy_echo "Running $module init ..."
    # Using expect per https://likegeeks.com/expect-command/
-   set timeout -1
-   npm run kakunin init  # spawn ?
-   expect "? What kind of application would you like to test?" ### Answer: _
-   send -- "3"
-   expect "? What is base url? [http://localhost:3000]"
-   send -- "http://todomvc.com"
-   expect "? What kind of email service would you like to use?"
-   send -- "1"
-
+#   set timeout -1  # to avoid timeout
+#   npm run kakunin init
+chmod +x kakunin-init-expect.sh
+./kakunin-init-expect.sh
 #   npm run kakunin init << EOF
 #3
 #http://todomvc.com
