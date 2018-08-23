@@ -5,8 +5,9 @@ spawn npm run kakunin init
    expect "Answer: "
    send -- "3\r"
 #   expect "? What is base url? [http://localhost:3000]"
-   expect "Answer:\r"
+   expect "Answer: "
+#   expect "{[#>$]}"         #expect several prompts, like #,$ and >
    send -- "http://todomvc.com\r"
 #   expect "? What kind of email service would you like to use?"
-   expect "Answer:\r"
+   expect "Answer: "
    send -- "1\r"
