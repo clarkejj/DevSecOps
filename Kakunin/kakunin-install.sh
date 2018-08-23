@@ -120,10 +120,12 @@ RUNTYPE="rerun"
 ### Install Kakunin CLI locally because it's experimental:
    fancy_echo "Running $module init ..."
    # Using expect per https://likegeeks.com/expect-command/
+   # https://www.tcl.tk/man/expect5.31/expect.1.html
 #   set timeout -1  # to avoid timeout
 #   npm run kakunin init
 chmod +x kakunin-init-expect.sh
 ./kakunin-init-expect.sh
+
 #   npm run kakunin init << EOF
 #3
 #http://todomvc.com
