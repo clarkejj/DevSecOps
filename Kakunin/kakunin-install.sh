@@ -23,14 +23,42 @@ function fancy_echo() {
    # shellcheck disable=SC2059
    printf "\\n>>> $fmt\\n" "$@"
 }
+command_exists() {
+  command -v "$@" > /dev/null 2>&1
+}
+
 TIME_START="$(date -u +%s)"
 FREE_DISKBLOCKS_START="$(df | sed -n -e '2{p;q}' | cut -d' ' -f 6)"
+
+### Install expect command to handle prompts:
+   if ! command_exists brew ; then
+       fancy_echo "Installing homebrew using whatever Ruby version ..."
+#       ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+#       brew tap caskroom/cask
+   fi
+   fancy_echo "$(brew --version)"
+
+   if ! command_exists node ; then
+       fancy_echo "Installing node using Homebrew ..."
+       brew install node
+   fi
+
+   if ! command_exists expect ; then
+       fancy_echo "Installing expect using Homebrew ..."
+       brew install expect
+   else
+          fancy_echo "Expect found. ..." 
+          # expect has no version function.
+          #brew update expect 
+   fi
 
 
             KAKUNIN_PROJECT="$1"  # from 1st argument
 if [[ -z "${KAKUNIN_PROJECT// }"  ]]; then  #it's blank so assign default:
             KAKUNIN_PROJECT="kakunin-workshop"
 fi
+
+RUNTYPE="rerun"
 
 # Kill kakunin process if it's still running from previous run:
    PID="$(ps -A | grep -m1 $KAKUNIN_PROJECT | grep -v "grep" | awk '{print $1}')"
@@ -86,7 +114,16 @@ fi
 
 ### Install Kakunin CLI locally because it's experimental:
    fancy_echo "Running $module init ..."
-   npm run kakunin init
+   # Using expect per https://likegeeks.com/expect-command/
+   set timeout -1
+   npm run kakunin init  # spawn ?
+   expect "? What kind of application would you like to test?" ### Answer: _
+   send -- "3"
+   expect "? What is base url? [http://localhost:3000]"
+   send -- "http://todomvc.com"
+   expect "? What kind of email service would you like to use?"
+   send -- "1"
+
 #   npm run kakunin init << EOF
 #3
 #http://todomvc.com
@@ -99,6 +136,7 @@ fi
 
 #   fancy_echo "List tree after init ..."
 #   tree >tree.after.init.txt
+exit
 
    fancy_echo "Linking from dist/step_definitions (see docs) ..."
    ## For use in IDEs
