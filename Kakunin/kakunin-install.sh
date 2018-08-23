@@ -95,7 +95,7 @@ RUNTYPE="rerun"
    # instead of npm init new, copy in:
       DOWNLOAD_URL="https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Kakunin/kakunin-init-expect.sh"
       echo "Downloading $DOWNLOAD_URL ..."
-      curl -O "$DOWNLOAD_URL"   # 300 bytes
+      curl -O "$DOWNLOAD_URL"   # 396 bytes
 
 ### install pre-requisites
 
