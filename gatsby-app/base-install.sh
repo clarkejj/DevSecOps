@@ -90,6 +90,13 @@ elif [ "$GATSBY_PROJECT" = "gatsby-starter-blog" ]; then
 			# by Kyle Mathews   
          # https://github.com/snipcart/snipcart-gatsby-integration # last changed Jan 28, 2016
 
+#elif [ "$GATSBY_PROJECT" = "gatsby-netlify" ]; then
+#   gatsby new "$GATSBY_PROJECT" https://github.com/wilsonmar/gatsby-netlify
+
+   # The repo was forked from https://github.com/snipcart/gatsby-netlify
+   # as described by https://snipcart.com/blog/static-forms-serverless-gatsby-netlify
+   # A demo of it by the original author is at https://gatsby-netlify-snipcart.netlify.com/
+
 elif [ "$GATSBY_PROJECT" = "gatsby-material-starter" ]; then
    # Alternative 3 - Per https://snipcart.com/blog/pwa-example-ecommerce-gatsby
    # A PWA Example: Build an E-Commerce Progressive Web App with Gatsby JULY 03, 2018
@@ -106,7 +113,8 @@ elif [ "$GATSBY_PROJECT" = "gatsby-starter-bulma-storybook" ]; then
 
 #elif [ "$GATSBY_PROJECT" = "gatsby-???" ]; then
 
-   # Alternative 4 - https://snipcart-gatsby-grav.netlify.com/
+#elif [ "$GATSBY_PROJECT" = "snipcart-gatsby-grav.netlify.com" ]; then
+#   gatsby new "$GATSBY_PROJECT" https://snipcart-gatsby-grav.netlify.com
    # Makes use of Grav CMS
 
 #elif [ "$GATSBY_PROJECT" = "gatsby-???" ]; then
