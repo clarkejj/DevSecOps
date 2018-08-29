@@ -17,7 +17,7 @@ package="gitlab-runner"
 package_folder="/usr/local/bin/"
 
 runner_url="https://gitlab.com/"
-runner_token="" # 1HEHB_jN-wttCDBQnK2n"  # copy from https://gitlab.com/{acct}/{project}/settings/ci_cd
+PRIVATE-TOKEN="" # 1HEHB_jN-wttCDBQnK2n"  # copy from https://gitlab.com/{acct}/{project}/settings/ci_cd
 
 ### Define utility functions:
 function fancy_echo() {
@@ -115,30 +115,30 @@ gitlab-runner --version
 
 ### Set token if one is specified:
    if [ -z "$runner_token" ]; then 
-      fancy_echo "No specific Runner token for gitlab-runner to register ..."
+      fancy_echo "No Runner token for gitlab-runner to register ..."
    else
-      fancy_echo "gitlab-runner register (token to specific Runner) ..."
+      fancy_echo "gitlab-runner register token ..."
       # Running in system-mode.  
-      sudo gitlab-runner register <<EOF
-https://gitlab.com/
-1HEHB_jN-wttCDBQnK2n
-STARTER
-none
-EOF
+      sudo gitlab-runner register
+   # Please enter the gitlab-ci coordinator URL (e.g. https://gitlab.com/):
+#https://gitlab.com/
+   #Please enter the gitlab-ci token for this runner:
+#$runner_token # ="1HEHB_jN-wttCDBQnK2n"  # copied from https://gitlab.com/{acct}/{project}/settings/ci_cd
+   # Please enter the gitlab-ci description for this runner:   # runner_url="https://gitlab.com/"
+#$STARTER  # "$HOME/$THISPGM.$LOG_DATETIME.log"
+   #Please enter the gitlab-ci tags for this runner (comma separated):
+#none
+
+      # TODO: Get this alternative working with variable substitution:
+#      sudo gitlab-runner register <<EOF
+#https://gitlab.com/
+#$PRIVATE-TOKEN
+#$STARTER
+#none
+#EOF
    fi
 
 
-   # Please enter the gitlab-ci coordinator URL (e.g. https://gitlab.com/):
-#https://gitlab.com/
-
-   #Please enter the gitlab-ci token for this runner:
-#$runner_token # ="1HEHB_jN-wttCDBQnK2n"  # copied from https://gitlab.com/{acct}/{project}/settings/ci_cd
-
-   # Please enter the gitlab-ci description for this runner:   # runner_url="https://gitlab.com/"
-#$STARTER  # "$HOME/$THISPGM.$LOG_DATETIME.log"
-
-   #Please enter the gitlab-ci tags for this runner (comma separated):
-#none
 
 ### End Job metadata:
 
