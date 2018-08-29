@@ -1,8 +1,9 @@
-#!/usr/bin/expect -f 
+#!/usr/bin/expect 
 # File kakunin-init-expect.sh
 # See https://www.pantz.org/software/expect/expect_examples_and_tips.html
 
 #   set timeout -1  # wait to avoid timeout
+
 spawn npm run kakunin init
 #   expect "? What kind of application would you like to test?"
 #  "/r" in for return key.
