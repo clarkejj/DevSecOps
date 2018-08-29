@@ -1,0 +1,14 @@
+<plist version="1.0">
+<dict>
+<key>Label</key><string>gitlab-runner</string>
+<key>ProgramArguments</key>
+<array>
+<string>/Users/gitlab/Bin/gitlab-runner-daemon.sh</string>
+</array>
+<key>UserName</key><string>gitlab</string>
+<key>SessionCreate</key><true/>
+<key>KeepAlive</key><true/>
+<key>RunAtLoad</key><true/>
+<key>Disabled</key><false/>
+</dict>
+</plist>
