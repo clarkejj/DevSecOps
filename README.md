@@ -1,6 +1,6 @@
 This repo contains assets for a hands-on DevSecOps class which enables you to legitimately claim this on your resume:
 
-<strong>"Automated with bash and python scripts an end-to-end CI/CD Jenkins Groovy workflow, triggered by changes in GitHub, to instantiate utility services using Docker, then build, test, and deploy to several environments a 12 Factor app, using Kubernetes to load-balance and auto-scale within a monitored Google cloud that has logging."</strong>
+<strong>"Automated with bash and python scripts an end-to-end CI/CD workflow, triggered by commits and pushes to a Git cloud repository, to instantiate utility services using Docker, then build, test, and deploy to several environments a 12 Factor app that uses Kubernetes to load-balance and auto-scale within a monitored Google cloud that has logging."</strong>
 
 This is not a bunch of talk and fancy PowerPoint.
 
