@@ -38,8 +38,8 @@ TIME_START="$(date -u +%s)"
 FREE_DISKBLOCKS_START="$(df | sed -n -e '2{p;q}' | cut -d' ' -f 6)"
 THISPGM="mac-runner.sh"
 LOG_DATETIME=$(date +%Y-%m-%dT%H:%M:%S%z)-$((1 + RANDOM % 1000)) # ISO-8601 
+STARTER="$THISPGM $HOME/$THISPGM.$LOG_DATETIME.log ..."  # used in descriptions to link back to this run.
    # RANDOM is built-in Bash, to use for micro-seconds
-STARTER="$THISPGM $HOME/$THISPGM.$LOG_DATETIME.log ..."
 fancy_echo="Starting $STARTER"
 
 ### TODO: Install prerequisites if needed:
@@ -119,7 +119,18 @@ gitlab-runner --version
       fancy_echo "No Runner token for gitlab-runner to register ..."
    else
       fancy_echo "gitlab-runner register token ..."
-      # Running in system-mode.  
+      # Running in system-mode.
+
+      # Per https://gitlab.com/help/api/runners.md#register-a-new-runner
+      # curl --request POST "https://gitlab.example.com/api/v4/runners" \
+      #    --form "token=$PRIVATE-TOKEN" \
+      #    --form "description=$STARTER" \
+      #    --form "tag_list=ruby,mysql,tag1,tag2"
+      # {
+        # "id": "12345",
+        # "token": "6337ff461c94fd3fa32ba3b1ff4125"
+      # }
+
       sudo gitlab-runner register
    # Please enter the gitlab-ci coordinator URL (e.g. https://gitlab.com/):
 #https://gitlab.com/
