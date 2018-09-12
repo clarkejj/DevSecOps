@@ -23,24 +23,6 @@
 # which is part of quest ???
 # Comments under each command provide the RESPONSE returned when I ran it.
 
-### Define utility functions:
-function echo_f() {
-   local fmt="$1"; shift
-   # shellcheck disable=SC2059
-   printf "\\n>>> $fmt\\n" "$@"
-}
-function echo_c() {
-  local fmt="$1"; shift
-  printf "\\n  $ $fmt\\n" "$@"
-}
-function echo_r() {
-  local fmt="$1"; shift
-   # shellcheck disable=SC2059
-   printf "$fmt\\n" "$@"
-}
-command_exists() {
-  command -v "$@" > /dev/null 2>&1
-}
 
 TIME_START="$( date -u +%s )"
    # 1536771542
@@ -48,7 +30,7 @@ FREE_DISKBLOCKS_START="$( df | sed -n -e '2{p;q}' | cut -d' ' -f 6 )"
 LOG_PREFIX=$(date +%Y-%m-%dT%H:%M:%S%z)-$( ( 1 + RANDOM % 1000 ) )
    # ISO-8601 date plus RANDOM=$((1 + RANDOM % 1000))  # 3 digit random number.
    #  LOGFILE="$0.$LOG_PREFIX.log"
-echo_f "$0 starting at $LOG_PREFIX ..."
+echo ">>> $0 starting at $LOG_PREFIX ..."
 
 uname -a
    # RESPONSE: Linux cs-6000-devshell-vm-e3b7d016-01c1-493c-948c-f9eaac3e163b 4.14.33+ #1 SMP Sat Aug 11 08:05:16 PDT 2018 x86_64 GNU/Linux
