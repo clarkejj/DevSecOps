@@ -25,5 +25,5 @@
 
 echo "hello"
 
-uname -a
+#uname -a
    # RESPONSE: Linux cs-6000-devshell-vm-e3b7d016-01c1-493c-948c-f9eaac3e163b 4.14.33+ #1 SMP Sat Aug 11 08:05:16 PDT 2018 x86_64 GNU/Linux
