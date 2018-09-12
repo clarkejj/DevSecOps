@@ -23,14 +23,7 @@
 # which is part of quest ???
 # Comments under each command provide the RESPONSE returned when I ran it.
 
-
-TIME_START="$( date -u +%s )"
-   # 1536771542
-FREE_DISKBLOCKS_START="$( df | sed -n -e '2{p;q}' | cut -d' ' -f 6 )"
-LOG_PREFIX=$(date +%Y-%m-%dT%H:%M:%S%z)-$( ( 1 + RANDOM % 1000 ) )
-   # ISO-8601 date plus RANDOM=$((1 + RANDOM % 1000))  # 3 digit random number.
-   #  LOGFILE="$0.$LOG_PREFIX.log"
-echo ">>> $0 starting at $LOG_PREFIX ..."
+echo "hello"
 
 uname -a
    # RESPONSE: Linux cs-6000-devshell-vm-e3b7d016-01c1-493c-948c-f9eaac3e163b 4.14.33+ #1 SMP Sat Aug 11 08:05:16 PDT 2018 x86_64 GNU/Linux
