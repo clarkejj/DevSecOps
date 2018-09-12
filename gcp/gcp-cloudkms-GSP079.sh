@@ -14,14 +14,14 @@
 # Click "Yes" twice to Accept. 
 # Click the icon for the Cloud Shell and START CLOUD SHELL.
 # Copy the command below (without the #) 
-#    sh -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/gcp/gcp-cloudkms-GSP079.sh)"
-# Click the Google Cloud console and press command+V to paste:
+# sh -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/gcp/gcp-cloudkms-GSP079.sh)"
+# Click the Google Cloud console and press command+V to paste.
+
+# CURRENT STATUS: NOT WORKING. This error message appears:
+# sh: 27: Syntax error: "(" unexpected
 
 # which is part of quest ???
 # Comments under each command provide the RESPONSE returned when I ran it.
-
-
-# This script deletes folders left over from previous run so can be rerun (within the same session).
 
 ### Define utility functions:
 function echo_f() {
@@ -53,7 +53,9 @@ echo_f "$0 starting at $LOG_PREFIX ..."
 uname -a
    # RESPONSE: Linux cs-6000-devshell-vm-e3b7d016-01c1-493c-948c-f9eaac3e163b 4.14.33+ #1 SMP Sat Aug 11 08:05:16 PDT 2018 x86_64 GNU/Linux
 
-exit
+
+echo_f "Delete buckets left over from previous run so can be rerun (within the same session)."
+
 
     echo_c "gcloud auth list"
 GCP_AUTH=$( gcloud auth list )
