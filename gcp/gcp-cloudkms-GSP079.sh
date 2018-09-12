@@ -1,13 +1,20 @@
 #!/bin/bash -e
 
 # SCRIPT STATUS: IN THE WORKS. Results obtained after running twice on Sep 12, 2018.
-# This script, written by WilsonMar@gmail.com, is intended to be run by you 
-# copying this command and pasting in the Google Cloud console
-# sh -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/gcp/gcp-cloudkms-GSP079.sh)"
-
+# This script, written by WilsonMar@gmail.com, is intended to be run by you after you
 # This script performs the commands described in the "Getting Started with Cloud KMS" (GSP079) hands-on lab at
 #    https://google.qwiklabs.com/focuses/1713?parent=catalog
+# Sign Out and Use Another Account. Copy and Paste Account and Password from the Qwiklabs page.
+# Click "Done" at "Protect your account".
+# Click "Yes" to Accept. # No need to create a new project 
+# Click the icon for the Cloud Shell and START CLOUD SHELL.
+# Copy the command below (without the #) 
+# sh -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/gcp/gcp-cloudkms-GSP079.sh)"
+# Click the Google Cloud console and press command+V to paste:
+
 # which is part of quest ???
+# Comments under each command provide the RESPONSE returned when I ran it.
+
 
 # This script deletes folders left over from previous run so can be rerun (within the same session).
 
