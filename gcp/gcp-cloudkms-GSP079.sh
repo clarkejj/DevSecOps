@@ -37,9 +37,9 @@ command_exists() {
   command -v "$@" > /dev/null 2>&1
 }
 
-TIME_START="$(date -u +%s)"
-FREE_DISKBLOCKS_START="$(df | sed -n -e '2{p;q}' | cut -d' ' -f 6)"
-LOG_PREFIX=$(date +%Y-%m-%dT%H:%M:%S%z)-$((1 + RANDOM % 1000))
+TIME_START="$( date -u +%s )"
+FREE_DISKBLOCKS_START="$( df | sed -n -e '2{p;q}' | cut -d' ' -f 6 )"
+LOG_PREFIX=$(date +%Y-%m-%dT%H:%M:%S%z)-$( ( 1 + RANDOM % 1000 ) )
    # ISO-8601 date plus RANDOM=$((1 + RANDOM % 1000))  # 3 digit random number.
    #  LOGFILE="$0.$LOG_PREFIX.log"
 echo_f "$0 starting at $LOG_PREFIX ..."
@@ -64,7 +64,7 @@ GCP_PROJECT=$(gcloud config list project | grep project | awk -F= '{print $2}' )
 
      echo_c "gcloud config list project"
 PROJECT_ID=$(gcloud config list project --format "value(core.project)")
-echo ">>> GCP_PROJECT=$GCP_PROJECT, PROJECT_ID=$PROJECT_ID"  # response: "qwiklabs-gcp-9cf8961c6b431994"
+echo_f "GCP_PROJECT=$GCP_PROJECT, PROJECT_ID=$PROJECT_ID"  # response: "qwiklabs-gcp-9cf8961c6b431994"
 RESPONSE=$(gcloud compute project-info describe --project $GCP_PROJECT)
    # Extract from:
    #items:
@@ -73,7 +73,7 @@ RESPONSE=$(gcloud compute project-info describe --project $GCP_PROJECT)
    #- key: google-compute-default-region
    # value: us-central1
    #- key: ssh-keys
-#echo ">>> RESPONSE=$RESPONSE"
+#echo_r "RESPONSE=$RESPONSE"
 #TODO: Extract value: based on previous line key: "google-compute-default-region"
 #  cat "$RESPONSE" | sed -n -e '/Extract from:/,/<\/footer>/ p' | grep -A2 "key: google-compute-default-region" | sed 's/<\/\?[^>]\+>//g' | awk -F' ' '{ print $4 }'; rm -f $outputFile
 
