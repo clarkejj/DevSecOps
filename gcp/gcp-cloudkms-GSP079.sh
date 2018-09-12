@@ -1,14 +1,12 @@
 #!/bin/bash -e
 
-# SCRIPT STATUS: WORKING. Results obtained after running twice on May 24, 2018.
-# This performs the commands described in the "Cloud ML Engine: Qwik Start" (GSP076) hands-on lab at
-#    https://google-run.qwiklab.com/catalog_lab/676 
-#    https://google-run.qwiklab.com/focuses/725?parent=catalog
-# which is part of quest https://google-run.qwiklab.com/quests/34 (Baseline: Data, ML, AI)
-# and https://google-run.qwiklab.com/quests/32 (Machine Learning APIs)
+# SCRIPT STATUS: IN THE WORKS. Results obtained after running twice on Sep 12, 2018.
+# This performs the commands described in the "Getting Started with Cloud KMS" (GSP079) hands-on lab at
+#    https://google.qwiklabs.com/focuses/1713?parent=catalog
+# which is part of quest ???
 
 # Instead of typing, copy this command to run in the console within the cloud:
-# sh -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/gcp/gcp-cloudml-GSP076.sh)"
+# sh -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/gcp/gcp-cloudkms-GSP079.sh)"
 
 # The script, by Wilson Mar, Wisdom Hambolu, and others,
 # adds steps to grep values into variables for variation and verification,
@@ -18,12 +16,15 @@
 uname -a
    # RESPONSE: Linux cs-6000-devshell-vm-91a4d64c-2f9d-4102-8c22-ffbc6448e449 3.16.0-6-amd64 #1 SMP Debian 3.16.56-1+deb8u1 (2018-05-08) x86_64 GNU/Linux
 
-#gcloud auth list
+echo_c "gcloud auth list"
+GCP_AUTH=$( gcloud auth list )
+echo ">>> $GCP_AUTH"
    #           Credentialed Accounts
    # ACTIVE  ACCOUNT
    #*       google462324_student@qwiklabs.net
    #To set the active account, run:
    #    $ gcloud config set account `ACCOUNT`
+exit
 
 GCP_PROJECT=$(gcloud config list project | grep project | awk -F= '{print $2}' )
    # awk -F= '{print $2}'  extracts 2nd word in response:
