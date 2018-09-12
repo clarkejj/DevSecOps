@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# SCRIPT STATUS: IN THE WORKS. Results obtained after running twice on Sep 12, 2018.
+# CURRENT STATUS: NOT WORKING. This error message appears on Sep 12, 2018:
+# sh: 27: Syntax error: "(" unexpected
+
 # This script, written by WilsonMar@gmail.com, is intended to be run by you after you
 # This script performs the commands described in the "Getting Started with Cloud KMS" (GSP079) hands-on lab at
 #    https://google.qwiklabs.com/focuses/1713?parent=catalog
@@ -16,9 +18,6 @@
 # Copy the command below (without the #) 
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/gcp/gcp-cloud-debug.sh)"
 # Click the Google Cloud console and press command+V to paste.
-
-# CURRENT STATUS: NOT WORKING. This error message appears:
-# sh: 27: Syntax error: "(" unexpected
 
 # which is part of quest ???
 # Comments under each command provide the RESPONSE returned when I ran it.
