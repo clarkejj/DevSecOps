@@ -38,6 +38,7 @@ command_exists() {
 }
 
 TIME_START="$( date -u +%s )"
+   # 1536771542
 FREE_DISKBLOCKS_START="$( df | sed -n -e '2{p;q}' | cut -d' ' -f 6 )"
 LOG_PREFIX=$(date +%Y-%m-%dT%H:%M:%S%z)-$( ( 1 + RANDOM % 1000 ) )
    # ISO-8601 date plus RANDOM=$((1 + RANDOM % 1000))  # 3 digit random number.
