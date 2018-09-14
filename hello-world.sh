@@ -34,4 +34,4 @@ elif [[ $platform == 'windows' ]]; then
    alias ls='dir'
 fi
 
-echo "End of script"
+echo "End of script."
