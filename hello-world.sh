@@ -13,13 +13,13 @@ echo "Hello world!"
 platform='unknown'
 unamestr=`uname`
 if [[ "$unamestr" == 'Darwin' ]]; then
-   platform='macos'
+            platform='macos'
 elif [[ "$unamestr" == 'Linux' ]]; then
-   platform='linux'
+              platform='linux'
 elif [[ "$unamestr" == 'FreeBSD' ]]; then
-   platform='freebsd'
+              platform='freebsd'
 elif [[ "$unamestr" == 'Windows' ]]; then
-   platform='windows'
+              platform='windows'
 fi
 echo "I'm $unamestr = $platform"
 
@@ -33,3 +33,5 @@ elif [[ $platform == 'freebsd' ]]; then
 elif [[ $platform == 'windows' ]]; then
    alias ls='dir'
 fi
+
+echo "End of script"
