@@ -9,14 +9,15 @@
 
 echo "Hello world!"
 
+### OS detection:
 platform='unknown'
 unamestr=`uname`
-echo "$unamestr"
 if [[ "$unamestr" == 'Linux' ]]; then
    platform='linux'
 elif [[ "$unamestr" == 'FreeBSD' ]]; then
    platform='freebsd'
 fi
+echo "$unamestr = $platform"
 
 if [[ $platform == 'linux' ]]; then
    alias ls='ls --color=auto'
