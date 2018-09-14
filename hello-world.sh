@@ -11,7 +11,7 @@ echo "Hello world!"
 
 ### OS detection:
 platform='unknown'
-unamestr=`uname`
+unamestr=$( uname )
 if [[ "$unamestr" == 'Darwin' ]]; then
             platform='macos'
 elif [[ "$unamestr" == 'Linux' ]]; then
