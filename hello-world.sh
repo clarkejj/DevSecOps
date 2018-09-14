@@ -17,7 +17,7 @@ if [[ "$unamestr" == 'Linux' ]]; then
 elif [[ "$unamestr" == 'FreeBSD' ]]; then
    platform='freebsd'
 fi
-echo "$unamestr = $platform"
+echo "I'm $unamestr = $platform"
 
 if [[ $platform == 'linux' ]]; then
    alias ls='ls --color=auto'
