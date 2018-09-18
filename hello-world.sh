@@ -7,7 +7,7 @@
 # Copy this command and paste in your terminal:
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/hello-world.sh)"
 
-echo "Hello world!"
+echo "Hello world! v1.3"
 
 ### OS detection:
 platform='unknown'
