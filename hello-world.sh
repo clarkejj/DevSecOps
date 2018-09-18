@@ -4,22 +4,23 @@
 # Described in https://
 
 # This script is used to verify that scripts can run
-# Copy this command and paste in your terminal:
+# Copy this command (without the #) and paste in your terminal:
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/hello-world.sh)"
 
 echo "Hello world! v1.3"
+# On a Windows 10 Pro: Linux MOSCLPJ0121 4.4.0-43-Microsoft #1-Microsoft Wed Dec 31 14:42:53 PST 2014 x86_64 x86_64 x86_64 GNU/Linux
 
 ### OS detection:
 platform='unknown'
 unamestr=$( uname )
 if [ "$unamestr" == 'Darwin' ]; then
-            platform='macos'
+           platform='macos'
 elif [ "$unamestr" == 'Linux' ]; then
-              platform='linux'
+             platform='linux'
 elif [ "$unamestr" == 'FreeBSD' ]; then
-              platform='freebsd'
+             platform='freebsd'
 elif [ "$unamestr" == 'Windows' ]; then
-              platform='windows'
+             platform='windows'
 fi
 echo "I'm $unamestr = $platform"
 
