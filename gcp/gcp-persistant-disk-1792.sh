@@ -1,15 +1,13 @@
 #!/bin/bash
-# This is gcp-java-951.sh from https://github.com/wilsonmar/DevSecOps/
+# This is gcp-persistant-disk-1792.sh from https://github.com/wilsonmar/DevSecOps/
 # by WilsonMar@gmail.com
-# Described in https://www.qwiklabs.com/focuses/951?parent=catalog
+# Described in https://google.qwiklabs.com/focuses/1792?parent=catalog
 
 # STATUS: NOT TESTED!
 
 # This script is used to verify that scripts can run
 # Copy this command (without the #) and paste in your terminal:
-# bash -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/gcp-java-951.sh)"
-
-echo "Hello world!"
+# bash -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/gcp-persistant-disk-1792.sh)"
 
 ### OS detection:
 platform='unknown'
@@ -108,50 +106,58 @@ RESPONSE=$( gcloud compute project-info describe --project $GCP_PROJECT )
 #xpnProjectStatus: UNSPECIFIED_XPN_PROJECT_STATUS
 
 
-# No reference in this script to REGION="us-central1"
-# echo_r "REGION=$REGION"
+REGION="us-central1-c"
+echo_r "REGION=$REGION"
 
-echo_f "MANUALLY: Enable Google App Engine Admin API:"
-# APIs & Services > Library > Type "App Engine Admin API" in search box. Click App Engine Admin API.
+DISK_NAME="mydisk1"
+echo_r "DISK_NAME=$DISK_NAME"
 
-echo_f "Download the Hello World app:"
-git clone https://github.com/GoogleCloudPlatform/java-docs-samples.git
-cd java-docs-samples/appengine/helloworld
-
-echo_c "mvn appengine:devserver"
-        mvn appengine:devserver
-
-cd java-docs-samples/appengine/helloworld/src/main/java/com/example/appengine/helloworld
-ls -al
-
-cd ~/java-docs-samples/appengine/helloworld
-mvn clean package
+DEVICE_NAME="mydevice1"
+echo_r "DEVICE_NAME=$DEVICE_NAME"
 
 
-echo_f "Deploy your app:"
-cd src/main/webapp/WEB-INF
-# nano appengine-web.xml
+echo_f "Attach a disk:"
+echo_c "gcloud compute instances attach-disk gcelab --disk \"$MY_DISK\" --zone \"$REGION\" "
+        gcloud compute instances attach-disk gcelab --disk  "$MY_DISK"  --zone  "$REGION"
+   # Updated [https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-d12e3215bb368ac5/zones/us-central1-c/instances/gcelab].
+
+echo_f "SSH into the virtual machine:"
+echo_c "gcloud compute ssh gcelab --zone \"$REGION\" "
+        gcloud compute ssh gcelab --zone "$REGION" <<< EOF
+y
 
 
-cd ~/java-docs-samples/appengine/helloworld
-gcloud app create
-   # Success! The app is now created. Please use `gcloud app deploy` to deploy your first app.
-mvn appengine:update
+EOF
+# When prompted for an RSA key pair passphrase, press __enter __for no passphrase, 
+# then press __enter __again to confirm no passphrase.
+
+echo_f "Make a mount point:"
+echo_c "sudo mkdir  /mnt/$DISK_NAME"
+        sudo mkdir "/mnt/$DISK_NAME"
+
+echo_f "Format the disk using mkfs.ext4:"
+sudo mkfs.ext4 -F -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/disk/by-id/scsi-0Google_PersistentDisk_persistent-disk-1
 
 
-echo_f "View your application:"
-# To launch your browser, enter the following command then click on the link it provides.
-echo_c "gcloud app browse"
-        gcloud app browse
+echo_f "Mount the disk to the instance with the discard option enabled:"
+sudo mount -o discard,defaults /dev/disk/by-id/scsi-0Google_PersistentDisk_persistent-disk-1 "/mnt/$DISK_NAME"
 
 
+echo_f "Find the disk device by listing the disk devices in /dev/disk/by-id/"
+echo_c "ls -l /dev/disk/by-id/"
+        ls -l /dev/disk/by-id/
+   # The default name is:
+   # scsi-0Google_PersistentDisk_persistent-disk-1.
 
+echo_f "Manually edit /etc/fstab to automatically mount the disk on restart:"
+# Open /etc/fstab in nano to edit.
+# sudo nano /etc/fstab
+# sed to add the following below the line that starts with "UUID=..."
+# /dev/disk/by-id/scsi-0Google_PersistentDisk_persistent-disk-1 /mnt/mydisk ext4 defaults 1 1
+# UUID=e084c728-36b5-4806-bb9f-1dfb6a34b396 / ext4 defaults 1 1
+# /dev/disk/by-id/scsi-0Google_PersistentDisk_persistent-disk-1 /mnt/mydisk ext4 defaults 1 1
 
-
-
-
-
-
+# See https://cloud.google.com/compute/docs/disks/local-ssd#create_a_local_ssd
 
 echo "End of script."
 
