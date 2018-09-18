@@ -3,6 +3,8 @@
 # by WilsonMar@gmail.com
 # Described in https://www.qwiklabs.com/focuses/951?parent=catalog
 
+# STATUS: NOT TESTED!
+
 # This script is used to verify that scripts can run
 # Copy this command and paste in your terminal:
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/gcp-java-951.sh)"

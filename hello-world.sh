@@ -12,25 +12,25 @@ echo "Hello world!"
 ### OS detection:
 platform='unknown'
 unamestr=$( uname )
-if [[ "$unamestr" == 'Darwin' ]]; then
+if [ "$unamestr" == 'Darwin' ]; then
             platform='macos'
-elif [[ "$unamestr" == 'Linux' ]]; then
+elif [ "$unamestr" == 'Linux' ]; then
               platform='linux'
-elif [[ "$unamestr" == 'FreeBSD' ]]; then
+elif [ "$unamestr" == 'FreeBSD' ]; then
               platform='freebsd'
-elif [[ "$unamestr" == 'Windows' ]]; then
+elif [ "$unamestr" == 'Windows' ]; then
               platform='windows'
 fi
 echo "I'm $unamestr = $platform"
 
 
-  if [[ $platform == 'macos' ]]; then
+  if [ $platform == 'macos' ]; then
    alias ls='ls --color=auto'
-elif [[ $platform == 'linux' ]]; then
+elif [ $platform == 'linux' ]; then
    alias ls='ls --color=auto'
-elif [[ $platform == 'freebsd' ]]; then
+elif [ $platform == 'freebsd' ]; then
    alias ls='ls -G'
-elif [[ $platform == 'windows' ]]; then
+elif [ $platform == 'windows' ]; then
    alias ls='dir'
 fi
 
