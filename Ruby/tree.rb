@@ -2,6 +2,13 @@
 # From https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Ruby/tree.rb
 # Generates to console a tree with attributes
 
+# CAUTION: Do not run this. It's getting this error message:
+#tree.rb:26:in `+': no implicit conversion of true into String (TypeError)
+#  from tree.rb:26:in `block in tree'
+#  from tree.rb:24:in `map'
+#  from tree.rb:24:in `tree'
+#  from tree.rb:37:in `<main>'
+
 def tree_hierarchy( root, &children )
   queue = [[root,"",true]]
   [].tap do |results|
