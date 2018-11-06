@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
+# From https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Ruby/tree.rb
+# Generates to console a tree with attributes
+
 def tree_hierarchy( root, &children )
   queue = [[root,"",true]]
   [].tap do |results|
