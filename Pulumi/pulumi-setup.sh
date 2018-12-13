@@ -402,17 +402,17 @@ echo "### Ensure Docker container is running:"
 
    fancy_echo "docker ps ..."
    MY_DOCKER_CONTAINERS="$(docker ps)"
+   echo "$MY_DOCKER_CONTAINERS"
       # SAMple rsponse;
       # CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
       # 89f8e3a79e22        nginx               "nginx -g 'daemon ..."   15 seconds ago      Up 14 seconds       0.0.0.0:8080->80/tcp   laughing_bardeen
-
-   MY_DOCKER_CONTAINER_ID="$(echo MY_DOCKER_CONTAINERS | grep $MY_DOCKER_IMAGE)"
-
+   MY_DOCKER_CONTAINER_ID="$(docker ps) | grep $MY_DOCKER_IMAGE"
+   echo "MY_DOCKER_CONTAINER_ID=$MY_DOCKER_CONTAINER_ID"
 exit
 
 echo "### Run pulumi new to create new container:"
 
-yes | pulumi new javascript --dir "$MY_DOCKER_CONTAINER_ID"
+   pulumi new javascript --dir "$MY_DOCKER_CONTAINER_ID" --yes
    		# Installing dependencies ...
    		#      Type                 Name                                       Plan       
  		# +   pulumi:pulumi:Stack  fargate-pulumi-aws-fargate-pulumi-aws-dev  create     
