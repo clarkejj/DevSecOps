@@ -21,7 +21,7 @@
 echo "### Define run values statically:"
          GOPATH="$HOME/gopkgs"   # edit this if you want.
          GOHOME="$HOME/golang1"  # where you store custom go source code
-MY_PULUMI_FOLDER=".pulumi" # default by sh installer.
+MY_PULUMI_FOLDER="$HOME/.pulumi" # default by sh installer.
 MY_PULUMI_USER="wilsonmar"
 MY_FOLDER="fargate-pulumi"
 MY_DOCKER_IMAGE="nginx"
@@ -273,14 +273,62 @@ echo "### Ensure Pulumi is installed:"  # See https://wilsonmar.github.io/pulumi
    fi
    fancy_echo "Pulumi: $(pulumi version)"  # v0.16.7
 
-      if [ ! -d "$MY_PULUMI_FOLDER" ]; then
-         fancy_echo "MY_PULUMI_FOLDER folder $MY_PULUMI_FOLDER already exists."
+echo "### Populate MY_PULUMI_FOLDER $MY_PULUMI_FOLDER with examples and templates repo:"
+
+      if [ -d "$MY_PULUMI_FOLDER" ]; then
+         fancy_echo "MY_PULUMI_FOLDER $MY_PULUMI_FOLDER already exists."
       else
          fancy_echo "Creating $MY_PULUMI_FOLDER ..."
          mkdir "$MY_PULUMI_FOLDER"
-         #export PATH=$PATH:$HOME/.pulumi/bin
-         #printf "\nexport PATH=\"\$PATH:$MY_PULUMI_FOLDER/bin\"\n" >>"$BASHFILE"
-         #source "$BASHFILE"  # to activate changes.
+      fi
+
+
+      # TODO: and empty
+      if [ -d "$MY_PULUMI_FOLDER/examples" ]; then
+         fancy_echo "MY_PULUMI_FOLDER/examples already exists. Updating..."
+         pushd "$MY_PULUMI_FOLDER/examples" >/dev/null
+         git remote -v
+         git pull 
+         echo ">>> Last commit:"
+         git log -n 1
+         echo ">>> List folders and files:"
+         ls 
+         popd >/dev/null
+      else
+         fancy_echo "Creating $MY_PULUMI_FOLDER/examples ..."
+         pushd "$MY_PULUMI_FOLDER" >/dev/null
+         # mkdir "$MY_PULUMI_FOLDER" is done by clone:
+         git clone https://github.com/pulumi/examples  # using master and other branches
+         cd examples
+         echo ">>> Last commit:"
+         git log -n 1
+         echo ">>> List folders and files:"
+         ls 
+         popd >/dev/null
+      fi
+
+
+      if [ -d "$MY_PULUMI_FOLDER/templates" ]; then
+         fancy_echo "MY_PULUMI_FOLDER/templates already exists. Updating..."
+         pushd "$MY_PULUMI_FOLDER/templates" >/dev/null
+         git remote -v
+         git pull 
+         echo ">>> Last commit:"
+         git log -n 1
+         echo ">>> List folders and files:"
+         ls 
+         popd >/dev/null
+      else
+         fancy_echo "Creating $MY_PULUMI_FOLDER/templates ..."
+         pushd "$MY_PULUMI_FOLDER" >/dev/null
+         # mkdir "$MY_PULUMI_FOLDER" is done by clone:
+         git clone https://github.com/pulumi/templates  --depth=1  # using master branch only
+         cd templates
+         echo ">>> Last commit:"
+         git log -n 1
+         echo ">>> List folders and files:"
+         ls 
+         popd >/dev/null
       fi
 
 
@@ -331,6 +379,9 @@ echo "### Ensure Docker app is running:"
 
 
 echo "### Ensure Docker container is running:"
+# Based on https://docs.docker.com/engine/reference/commandline/ps/
+# check if an exited container blocks, so you can remove it first prior to run the container:
+
    fancy_echo "Docker images:"
    docker images
       # RESPONSE SAMPLE:
@@ -343,57 +394,25 @@ echo "### Ensure Docker container is running:"
       # SUCH AS: docker run -p 8080:80 nginx 
    docker run -p 8080:80 "$MY_DOCKER_IMAGE"  &
       # RESPONSE is ps ID such as [1] 24467
-   
-   fancy_echo "ps -al ..."
-   ps -al
+   fancy_echo "open http://localhost:80 ..."
+   open http://localhost:8080  # in default browser
 
-   fancy_echo "Docker ps ..."
-   docker ps
+   fancy_echo "ps -al | grep docker ..."
+   ps -al | grep docker
+
+   fancy_echo "docker ps ..."
+   MY_DOCKER_CONTAINERS="$(docker ps)"
       # SAMple rsponse;
       # CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
       # 89f8e3a79e22        nginx               "nginx -g 'daemon ..."   15 seconds ago      Up 14 seconds       0.0.0.0:8080->80/tcp   laughing_bardeen
 
+   MY_DOCKER_CONTAINER_ID="$(echo MY_DOCKER_CONTAINERS | grep $MY_DOCKER_IMAGE)"
+
 exit
 
-echo "### Verify desired Docker image is running:"
-# Based on https://docs.docker.com/engine/reference/commandline/ps/
-# check if an exited container blocks, so you can remove it first prior to run the container:
-if [ ! "$(docker ps -q -f name=$MY_DOCKER_CONTAINER)" ]; then
-    if [ "$(docker ps -aq -f status=exited -f name=$MY_DOCKER_CONTAINER)" ]; then
-        # cleanup
-        docker rm "$MY_DOCKER_CONTAINER"
-    fi
-    docker run -d --name "$MY_DOCKER_CONTAINER" "$MY_DOCKER_IMAGE"
-fi
-exit
+echo "### Run pulumi new to create new container:"
 
-
-if [ $(docker inspect -f '{{.State.Running}}' "$MY_DOCKER_CONTAINER") = "true" ]; then 
-	echo ">>> Docker is running ..." # inside a Linux virtual machine, usually using VirtualBox as hypervisor. 
-else 
-    # Response: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
-	echo ">>> Docker $DOCKER_VERSION not running. Please start the app..."
-	exit
-fi
-
-exit # debugging
-
-
-echo "### Create Pulumi folder:"
-cd "$HOME"
-
-mkdir "$MY_PULUMI_FOLDER"  # "File exists" 
-   cd "$MY_PULUMI_FOLDER" 
-ls -al  # credentials.json, templates, workspaces
-
-mkdir "$MY_FOLDER"  # "File exists" 
-   cd "$MY_FOLDER"  # "File exists" 
-echo "MY_FOLDER=$MY_FOLDER in $PWD"
-ls -al
-
-### Run pulumi new to create new container:
-echo ">>> Answer:"
-   pulumi new javascript --dir "$MY_DOCKER_CONTAINER"
+yes | pulumi new javascript --dir "$MY_DOCKER_CONTAINER_ID"
    		# Installing dependencies ...
    		#      Type                 Name                                       Plan       
  		# +   pulumi:pulumi:Stack  fargate-pulumi-aws-fargate-pulumi-aws-dev  create     
