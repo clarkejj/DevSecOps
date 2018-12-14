@@ -205,11 +205,22 @@ echo "### Ensure Go is installed:"  # See https://wilsonmar.github.io/golang
          fi
          BASHFILE_EXPORT "GOPATH" "$GOPATH"
          source "$BASHFILE"  # to activate changes.
+      fi
 
-         fancy_echo "Populating $GOPATH with the most popular Go library ..."
+      PACKAGE="github.com/stretchr/testify"
+      if [ ! -d "$GOPATH/src/github.com/stretchr/testify" ]; then
+               fancy_echo "Populating $GOPATH with the most popular Go library ..."
             # per https://medium.com/google-cloud/analyzing-go-code-with-bigquery-485c70c3b451
-         go get github.com/stretchr/testify
-         ls "$GOPATH/src/github.com/stretchr/testify"
+         go get "$PACKAGE"
+         #ls "$GOPATH/src/github.com/stretchr/testify"
+      fi
+
+      PACKAGE="github.com/derekparker/delve/cmd/dlv"
+      if [ ! -d "$GOPATH/src/github.com/derekparker/delve/cmd/dlv" ]; then
+         fancy_echo "Populating $GOPATH with the Delve debugger ..."
+            # per https://github.com/derekparker/delve/blob/master/Documentation/installation/osx/install.md
+         go get -u "$PACKAGE"
+
          # PROTIP: Other libraries https://github.com/avelino/awesome-go
       fi
 
@@ -378,6 +389,23 @@ echo "### Ensure Docker app is running:"
    fi
 
 
+echo "### Remove Docker container already running:"
+   fancy_echo "ps -al | grep docker ..."
+   ps -al | grep docker
+
+   fancy_echo "docker ps ..."
+   docker ps
+      # SAMple rsponse;
+      # CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
+      # 89f8e3a79e22        nginx               "nginx -g 'daemon ..."   15 seconds ago      Up 14 seconds       0.0.0.0:8080->80/tcp   laughing_bardeen
+   MY_DOCKER_CONTAINER_ID="$(docker ps | grep $MY_DOCKER_IMAGE | awk '{print $1}' )"
+   echo "MY_DOCKER_CONTAINER_ID=$MY_DOCKER_CONTAINER_ID"  # such as 89f8e3a79e22 
+   if [ -z "$MY_DOCKER_CONTAINER_ID" ]; then
+      # https://docs.docker.com/engine/reference/commandline/stop/
+      docker stop "$MY_DOCKER_CONTAINER_ID"
+   fi
+
+
 echo "### Ensure Docker container is running:"
 # Based on https://docs.docker.com/engine/reference/commandline/ps/
 # check if an exited container blocks, so you can remove it first prior to run the container:
@@ -394,21 +422,26 @@ echo "### Ensure Docker container is running:"
       # SUCH AS: docker run -p 8080:80 nginx 
    docker run -p 8080:80 "$MY_DOCKER_IMAGE"  &
       # RESPONSE is ps ID such as [1] 24467
-   fancy_echo "open http://localhost:80 ..."
-   open http://localhost:8080  # in default browser
+
+   #fancy_echo "open http://localhost:8080 ..."
+   # open http://localhost:8080  # in default browser
 
    fancy_echo "ps -al | grep docker ..."
    ps -al | grep docker
 
    fancy_echo "docker ps ..."
-   MY_DOCKER_CONTAINERS="$(docker ps)"
-   echo "$MY_DOCKER_CONTAINERS"
+   docker ps
       # SAMple rsponse;
       # CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
       # 89f8e3a79e22        nginx               "nginx -g 'daemon ..."   15 seconds ago      Up 14 seconds       0.0.0.0:8080->80/tcp   laughing_bardeen
-   MY_DOCKER_CONTAINER_ID="$(docker ps) | grep $MY_DOCKER_IMAGE"
+   MY_DOCKER_CONTAINER_ID="$(docker ps | grep $MY_DOCKER_IMAGE | awk '{print $1}' )"
    echo "MY_DOCKER_CONTAINER_ID=$MY_DOCKER_CONTAINER_ID"
-exit
+
+
+# OPTIONAL: Test docker container using goss, installed by curl -fsSL https://goss.rocks/install | sh
+   # from https://github.com/aelsabbahy/goss#manual-installation
+   # describe at https://medium.com/@aelsabbahy/tutorial-how-to-test-your-docker-image-in-half-a-second-bbd13e06a4a9
+
 
 echo "### Run pulumi new to create new container:"
 
