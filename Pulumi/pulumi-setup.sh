@@ -207,23 +207,22 @@ h2 "Ensure pip3 install aws-sdk is installed:"
    info "$(aws --version)"  # aws-cli/1.11.160 Python/2.7.10 Darwin/17.4.0 botocore/1.7.18
 
 h2 "Populate AWS credentials from $AWS_ACCESS_FILE :"  # See https://wilsonmar.github.io/amazon-onboarding
-      # AWS_ACCESS_FILE="$HOME/.aws.env"
-
-      # Instead of storing access codes in the repository:
-      # Get AWS Access tokens https://pulumi.io/quickstart/aws/setup.html..."
-      if [ -f "$AWS_ACCESS_FILE" ]; then  # file's there:
-         fancy_echo "Loading $AWS_ACCESS_FILE to populate AWS_ACCESS_KEY_ID ..."
-         source "$AWS_ACCESS_FILE"
+   # Instead of storing access codes in the repository:
+   # AWS_ACCESS_FILE="$HOME/.aws.env"
+   if [ -f "$AWS_ACCESS_FILE" ]; then  # file's there:
+      if grep -q "<YOUR_DEFAULT_ACCESS_KEY_ID>" "$AWS_ACCESS_FILE" ; then
+         warnError "File $AWS_ACCESS_FILE still contains template token values".
+         warnError "Please update with token based on https://???"
       else
-         warnError "File $AWS_ACCESS_FILE not found to populate AWS_ACCESS_KEY_ID. Continuing anyway."
+         fancy_echo "File $AWS_ACCESS_FILE found. Good to go."  # not echo'd on screen to maintain secrecy.
       fi
-
-   #fancy_echo "Trying $AWS_ACCESS_FILE to populate AWS_ACCESS_KEY_ID ..."
-   if [ -z "$AWS_ACCESS_KEY_ID" ]; then # it's empty:
-      warnError "AWS_ACCESS_KEY_ID variable not found.  Continuing anyway."
-   else  # loaded from previous run:
-      fancy_echo "AWS_ACCESS_KEY_ID variable found. Good to go."  # not echo'd on screen to maintain.
-   fi   
+   else
+      warnError "File $AWS_ACCESS_FILE not found to populate AWS_ACCESS_KEY_ID. Downloding template..."
+      curl --url "https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Pulumi/.aws.env" \
+           --output "$AWS_ACCESS_FILE"  # 347 received.
+      warnError "Please update with token based on https://pulumi.io/quickstart/aws/setup.html"
+   fi
+   # aws cli will read file.
 
 
 h2 "Ensure Azure CLI is installed:" # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos?view=azure-cli-latest
@@ -239,24 +238,21 @@ h2 "Ensure Azure CLI is installed:" # https://docs.microsoft.com/en-us/cli/azure
    info "$(az -v | grep "azure-cli")"  # Example: azure-cli (2.0.52)
 
 h2 "Populate Azure credentials from $AZURE_ACCESS_FILE"
-      # AZURE_ACCESS_FILE="$HOME/.azure.env"
-      fancy_echo "Trying $AZURE_ACCESS_FILE to populate AZURE_ACCESS_TOKEN ..."
-      # Get azure Access tokens from https://azure.io/reference/config.html
-      # (such as "wilsonmar-github-2018-12-14" for account-provider-date)
-      # Instead of storing access codes in the repository:
-      if [ -f "$AZURE_ACCESS_FILE" ]; then  # file's there:
-         fancy_echo "Loading $AZURE_ACCESS_FILE to populate AZURE_ACCESS_TOKEN ..."
-         source "$AZURE_ACCESS_FILE"
+   # Instead of storing access codes in the repository:
+   # AZURE_ACCESS_FILE="$HOME/.azure.env"
+   if [ ! -f "$AZURE_ACCESS_FILE" ]; then  # file's there:
+      warnError "File $AZURE_ACCESS_FILE not found to populate AZURE_ACCESS_TOKEN. Downloding template..."
+      curl --url "https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Pulumi/.azure.env" \
+           --output "$AZURE_ACCESS_FILE"  # 181 bytes received.
+      warnError "Please update with token based on https://???"
+   else
+      if grep -q "replace_this_with_the_one_generated_4you" "$AZURE_ACCESS_FILE" ; then
+         warnError "File $AZURE_ACCESS_FILE still contains template token values".
+         warnError "Please update with token based on https://???"
       else
-         warnError "File $AZURE_ACCESS_FILE not found to populate AZURE_ACCESS_TOKEN. Continuing anyway."
+         fancy_echo "File $AZURE_ACCESS_FILE found. Good to go."  # not echo'd on screen to maintain secrecy.
       fi
-
-   if [ -z "$AZURE_ACCESS_TOKEN" ]; then # it's empty:
-      warnError "AZURE_ACCESS_TOKEN variable not found. "  # do not echo'd on screen to maintain.
-   else  # loaded from previous run:
-      fancy_echo "AZURE_ACCESS_TOKEN variable found. Good to go."  # not echo'd on screen to maintain.
-   fi   
-
+   fi
 
 h2 "Ensure latest Node.js is installed:"  # See https://wilsonmar.github.io/node
    if ! command_exists node ; then
@@ -367,7 +363,7 @@ h2 "Ensure Go is installed:"  # See https://wilsonmar.github.io/golang
    info "$(go version)"  # Example: go version go1.11.2 darwin/amd64
 
 
-h2 "Ensure Pulumi is installed:"  # See https://pulumi.io/reference/cli/pulumi_login.html
+h2 "Ensure Pulumi latest is installed:"  # See https://pulumi.io/reference/cli/pulumi_login.html
    if ! command_exists pulumi ; then
       fancy_echo "Installing pulumi using brew..."
       brew install pulumi
@@ -377,29 +373,42 @@ h2 "Ensure Pulumi is installed:"  # See https://pulumi.io/reference/cli/pulumi_l
           brew upgrade pulumi
        fi
    fi
-   info "Pulumi: $(pulumi version)"  # v0.16.7
+   # Since "pulumi version" can issue this message to STDERR 2>
+   # warning: A new version of Pulumi is available. To upgrade from version '0.16.7' to '0.16.8', visit https://pulumi.io/install for manual instructions and release notes.
+   RESULT="$(pulumi version 2>&1)"  # https://stackoverflow.com/questions/962255/how-to-store-standard-error-in-a-variable-in-a-bash-script
+   stderr=$RESULT
+   if [[ "$stderr" == *"warning: A new version"* ]]; then
+      echo "$RESULT"
+      brew upgrade pulumi
+   else
+      info "$(pulumi version)"  # v0.16.8
+   fi
 
 
 h2 "Populate Pulumi Access Token $PULUMI_ACCESS_FILE is setup:"  # See https://app.pulumi.com/account
-      # PULUMI_ACCESS_FILE="$HOME/.pulumi.env"
-      fancy_echo "Trying $PULUMI_ACCESS_FILE to populate PULUMI_ACCESS_TOKEN ..."
-      # Get Pulumi Access tokens from https://pulumi.io/reference/config.html
-      # (such as "wilsonmar-github-2018-12-14" for account-provider-date)
-      # Instead of storing access codes in the repository:
-      if [ -f "$PULUMI_ACCESS_FILE" ]; then  # file's there:
-         fancy_echo "Loading $PULUMI_ACCESS_FILE to populate PULUMI_ACCESS_TOKEN ..."
-         source "$PULUMI_ACCESS_FILE"
+   # Instead of storing access codes in the repository:
+   # PULUMI_ACCESS_FILE="$HOME/.pulumi.env" defined at top of this file.
+   if [ ! -f "$PULUMI_ACCESS_FILE" ]; then  # file's not there:
+      fancy_echo "File $PULUMI_ACCESS_FILE not found to populate PULUMI_ACCESS_TOKEN. Downloding template..."
+      curl --url "https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Pulumi/.pulumi.env" \
+           --output "$PULUMI_ACCESS_FILE"  # 181 bytes received.
+      warnError "Please update with token based on https://pulumi.io/reference/config.html"
+   else
+      if grep -q "replace_this_with_the_one_generated_4you" "$PULUMI_ACCESS_FILE" ; then
+         warnError "File $PULUMI_ACCESS_FILE still contains template token values".
+         warnError "Please update with token based on https://pulumi.io/reference/config.html"
+            # (such as "wilsonmar-github-2018-12-14" for account-provider-date)
       else
-         fancy_echo "File $PULUMI_ACCESS_FILE not found to populate PULUMI_ACCESS_TOKEN. Exiting."
-         exit
+        fancy_echo "Loading $PULUMI_ACCESS_FILE to populate PULUMI_ACCESS_TOKEN ..."
+        source "$PULUMI_ACCESS_FILE"   # not echo'd on screen to maintain secrecy.
+        if [ -z "$PULUMI_ACCESS_TOKEN" ]; then # it's empty:
+         fancy_echo "PULUMI_ACCESS_TOKEN variable not loaded from $PULUMI_ACCESS_FILE."
+      else
+         fancy_echo "PULUMI_ACCESS_TOKEN variable found. Good to go."  # not echo'd on screen to maintain.
       fi
+   fi
 
-   if [ -z "$PULUMI_ACCESS_TOKEN" ]; then # it's empty:
-      fancy_echo "PULUMI_ACCESS_TOKEN variable not found. "  # do not echo'd on screen to maintain.
-   else  # loaded from prvious run:
-      fancy_echo "PULUMI_ACCESS_TOKEN variable found. Good to go."  # not echo'd on screen to maintain.
-   fi   
-
+exit
 
 h2 "Populate MY_PULUMI_FOLDER $MY_PULUMI_FOLDER with examples and templates repo:"
       if [ -d "$MY_PULUMI_FOLDER" ]; then
