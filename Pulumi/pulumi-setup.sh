@@ -1,12 +1,14 @@
 #!/bin/bash
 # This is pulumi-sample.sh at https://github.com/wilsonmar/DevSecOps/aws/pulumi-sample.md
 # by WilsonMar@gmail.com who explains this at https://wilsonmar.github.io/pulumi
-# To install on Macs what packages are necessary,
-# then 
+# To install on Macs what packages are necessary, in this sequence: 
+# xcode-cli, homebrew, VSCode, git, Python3 > aws & azure-cli,  Node.js, Go,  Docker, Pulumi,
 
 # STATUS: Experimental - does not completely work yet
 # 1) Edit the run values below for your needs.
-# 2) Run this bash script on MacOS 
+# 2A) RUN
+# curl -fsSL https://get.pulumi.com | sh
+# 2B) Run this bash script on MacOS 
 #    $ chmod +x pulumi-sample.sh
 #    $ ./pulumi-sample.sh
 # to serve an HTML file in an NGINX container 
@@ -18,12 +20,16 @@
 
 # set -o verbose  # or set -v echoes all commands before executing, for debugging
     
-echo "### Define run values statically:"
+### "Define run values statically:"
          GOPATH="$HOME/gopkgs"   # edit this if you want.
          GOHOME="$HOME/golang1"  # where you store custom go source code
+      PULUMI_ACCESS_FILE="$HOME/.pulumi.env"
+      AWS_ACCESS_FILE="$HOME/.aws.env"
+      AZURE_ACCESS_FILE="$HOME/.azure.env"
 MY_PULUMI_FOLDER="$HOME/.pulumi" # default by sh installer.
 MY_PULUMI_USER="wilsonmar"
 MY_FOLDER="fargate-pulumi"
+MY_DOCKER_NAME="webserver"
 MY_DOCKER_IMAGE="nginx"
 MY_STACK_NAME="fargate-pulumi-aws-dev"  # generated?
 MY_AWS_REGION="us-west-2"
@@ -33,11 +39,43 @@ BASHFILE="$HOME/.bash_profile"  # on Macs
 
 # https://twitter.com/funcOfJoe/status/1046129151592128512
 
-### Generic functions:
+
+### Set color variables (based on aws_code_deploy.sh): 
+bold="\e[1m"
+dim="\e[2m"
+underline="\e[4m"
+blink="\e[5m"
+reset="\e[0m"
+red="\e[31m"
+green="\e[32m"
+blue="\e[34m"
+
+### Generic functions used across bash scripts:
+h2() {
+  printf "\n${bold}%s${reset}\n" "$(echo "$@" | sed '/./,$!d')"
+}
+info() {
+  printf "${dim}➜ %s${reset}\n" "$(echo "$@" | sed '/./,$!d')"
+}
+success() {
+  printf "${green}✔ %s${reset}\n" "$(echo "$@" | sed '/./,$!d')"
+}
+error() {
+  printf "${red}${bold}✖ %s${reset}\n" "$(echo "$@" | sed '/./,$!d')"
+}
+warnError() {
+  printf "${red}✖ %s${reset}\n" "$(echo "$@" | sed '/./,$!d')"
+}
+warnNotice() {
+  printf "${blue}✖ %s${reset}\n" "$(echo "$@" | sed '/./,$!d')"
+}
+note() {
+  printf "\n${bold}${blue}Note:${reset} ${blue}%s${reset}\n" "$(echo "$@" | sed '/./,$!d')"
+}
 function fancy_echo() {
    local fmt="$1"; shift
    # shellcheck disable=SC2059
-   printf "\\n>>> $fmt\\n" "$@"
+   printf ">>> $fmt\\n" "$@"
 }
 command_exists() {
   command -v "$@" > /dev/null 2>&1
@@ -69,11 +107,32 @@ LOG_DATETIME=$(date +%Y-%m-%dT%H:%M:%S%z)-$((1 + RANDOM % 1000))
 
 clear  # screen
 echo "$THISPGM starting at $LOG_DATETIME ..."
+      uname -rvm  # see https://wilsonmar.github.io/mac-osx-terminal/#operating-system-kernel
 
 
-### Installation sequence: xcode-cli, homebrew, VSCode, git, Python3 > aws & azure-cli,  Node.js, Go,  Docker, Pulumi,
+h2 "Ensure Xcode-CLI is installed:"  # See https://wilsonmar.github.io/xcode
+   # Ensure Apple's command line tools (such as cc) are installed by node:
+   # from open "https://developer.apple.com/downloads/index.action"
+   # Based on http://www.mokacoding.com/blog/how-to-install-xcode-cli-tools-without-gui/
+   # and https://github.com/why-jay/osx-init/blob/master/install.sh
+   if command_exists cc ; then
+      XCODE="$(xcode-select --version)"  # Example: "xcode-select version 2354."
+      #if [[ "$( echo $XCODE | awk '{print $1}')" == xcode-select ]]; then
+      info "$XCODE macOS version $(sw_vers -productVersion)"
+   else
+      echo "Xcode-CLI not found. Installing ..."
+      fancy_echo "Accept Apple's license ..."
+      xcodebuild -license
+         # RESPONSE: xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance
+      info "$(xcode-select -p)"  # =/Library/Developer/CommandLineTools
 
-echo "### Ensure Homebrew is installed:"  # See https://wilsonmar.github.io/homebrew
+      fancy_echo "Installing Apple's command line tools (this takes a while) ..."
+      # using /System/Library/CoreServices/Install Command Line Developer Tools.app
+      xcode-select --install --reset  # /Library/Developer/CommandLineTools
+      # Xcode installs its git to /usr/bin/git; recent versions of OS X (Yosemite and later) ship with stubs in /usr/bin, which take precedence over this git. 
+   fi
+
+h2 "Ensure Homebrew is installed:"  # See https://wilsonmar.github.io/homebrew
    if ! command_exists brew ; then
        fancy_echo "Installing homebrew using Ruby..."
        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -86,14 +145,14 @@ echo "### Ensure Homebrew is installed:"  # See https://wilsonmar.github.io/home
           brew upgrade  # upgrades all modules.
        fi
    fi
-   fancy_echo "$(brew --version)"
+   info "$(brew --version)"
       # Homebrew/homebrew-core (git revision 35df; last commit 2018-12-13)
       # Homebrew/homebrew-cask (git revision bca77d; last commit 2018-12-13)
 
    brew analytics off  # see https://github.com/Homebrew/brew/blob/master/docs/Analytics.md
 
 
-echo "### Ensure latest vscode is installed:"  # See https://wilsonmar.github.io/text-editors/#visual-studio-code
+h2 "Ensure latest vscode is installed:"  # See https://wilsonmar.github.io/text-editors/#visual-studio-code
    if ! command_exists code ; then
       rm -rf "$HOME/Applications/Visual Studio Code.app"
       fancy_echo "Installing latest vscode for specific OS using brew..."
@@ -105,10 +164,10 @@ echo "### Ensure latest vscode is installed:"  # See https://wilsonmar.github.io
          brew cask upgrade visual-studio-code
       fi
    fi
-   fancy_echo "visual-studio-code: $(code --version)"  # 1.29.1 / bc24f98b5f70467bc689abf41cc5550ca637088e / x64
+   info "visual-studio-code: $(code --version)"  # 1.29.1 / bc24f98b5f70467bc689abf41cc5550ca637088e / x64
 
 
-echo "### Ensure latest git is installed:"  # See https://wilsonmar.github.io/git
+h2 "Ensure latest git is installed:"  # See https://wilsonmar.github.io/git
    if ! command_exists git ; then
       fancy_echo "Installing latest git for specific OS using brew..."
       brew install git   # /usr/local/Cellar/git/2.20.0: 1,526 files, 41.4MB
@@ -118,10 +177,10 @@ echo "### Ensure latest git is installed:"  # See https://wilsonmar.github.io/gi
          brew upgrade git  
       fi
    fi
-   fancy_echo "$(git --version)"  # git version 2.17.2 (Apple Git-113)
+   info "$(git --version)"  # git version 2.17.2 (Apple Git-113)
 
 
-echo "### Python3 is a pre-requisite for aws & azure:"
+h2 "Python3 is a pre-requisite for aws & azure:"
    if ! command_exists python3 ; then
       fancy_echo "Installing python3 (for specific os version) using brew..."
       brew install python3
@@ -131,10 +190,10 @@ echo "### Python3 is a pre-requisite for aws & azure:"
           brew upgrade python3
        fi
    fi
-   fancy_echo "$(python3 --version)"  # Example: Python 3.7.1
+   info "$(python3 --version)"  # Example: Python 3.7.1
 
 
-echo "### Ensure pip3 install aws-sdk is installed:"
+h2 "Ensure pip3 install aws-sdk is installed:"
    if ! command_exists aws ; then
       fancy_echo "Installing awscli using PIP3 ..."
       pip3 install awscli --upgrade --user
@@ -145,10 +204,29 @@ echo "### Ensure pip3 install aws-sdk is installed:"
          pip3 upgrade awscli --upgrade --user
       fi
    fi
-   echo "$(aws --version)"  # aws-cli/1.11.160 Python/2.7.10 Darwin/17.4.0 botocore/1.7.18
+   info "$(aws --version)"  # aws-cli/1.11.160 Python/2.7.10 Darwin/17.4.0 botocore/1.7.18
+
+h2 "Populate AWS credentials from $AWS_ACCESS_FILE :"  # See https://wilsonmar.github.io/amazon-onboarding
+      # AWS_ACCESS_FILE="$HOME/.aws.env"
+
+      # Instead of storing access codes in the repository:
+      # Get AWS Access tokens https://pulumi.io/quickstart/aws/setup.html..."
+      if [ -f "$AWS_ACCESS_FILE" ]; then  # file's there:
+         fancy_echo "Loading $AWS_ACCESS_FILE to populate AWS_ACCESS_KEY_ID ..."
+         source "$AWS_ACCESS_FILE"
+      else
+         warnError "File $AWS_ACCESS_FILE not found to populate AWS_ACCESS_KEY_ID. Continuing anyway."
+      fi
+
+   #fancy_echo "Trying $AWS_ACCESS_FILE to populate AWS_ACCESS_KEY_ID ..."
+   if [ -z "$AWS_ACCESS_KEY_ID" ]; then # it's empty:
+      warnError "AWS_ACCESS_KEY_ID variable not found.  Continuing anyway."
+   else  # loaded from previous run:
+      fancy_echo "AWS_ACCESS_KEY_ID variable found. Good to go."  # not echo'd on screen to maintain.
+   fi   
 
 
-echo "### Ensure Azure CLI is installed:" # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos?view=azure-cli-latest
+h2 "Ensure Azure CLI is installed:" # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos?view=azure-cli-latest
    if ! command_exists az ; then
       fancy_echo "Installing azure-cli (for specific os version) using brew..."
       brew install azure-cli  # /usr/local/Cellar/azure-cli/2.0.52: 19,791 files, 87.8MB
@@ -158,12 +236,29 @@ echo "### Ensure Azure CLI is installed:" # https://docs.microsoft.com/en-us/cli
           brew upgrade azure-cli
        fi
    fi
-   fancy_echo "$(az -v | grep "azure-cli")"  # Example: azure-cli (2.0.52)
+   info "$(az -v | grep "azure-cli")"  # Example: azure-cli (2.0.52)
 
-   ### az login delayed until need is known.
+h2 "Populate Azure credentials from $AZURE_ACCESS_FILE"
+      # AZURE_ACCESS_FILE="$HOME/.azure.env"
+      fancy_echo "Trying $AZURE_ACCESS_FILE to populate AZURE_ACCESS_TOKEN ..."
+      # Get azure Access tokens from https://azure.io/reference/config.html
+      # (such as "wilsonmar-github-2018-12-14" for account-provider-date)
+      # Instead of storing access codes in the repository:
+      if [ -f "$AZURE_ACCESS_FILE" ]; then  # file's there:
+         fancy_echo "Loading $AZURE_ACCESS_FILE to populate AZURE_ACCESS_TOKEN ..."
+         source "$AZURE_ACCESS_FILE"
+      else
+         warnError "File $AZURE_ACCESS_FILE not found to populate AZURE_ACCESS_TOKEN. Continuing anyway."
+      fi
+
+   if [ -z "$AZURE_ACCESS_TOKEN" ]; then # it's empty:
+      warnError "AZURE_ACCESS_TOKEN variable not found. "  # do not echo'd on screen to maintain.
+   else  # loaded from previous run:
+      fancy_echo "AZURE_ACCESS_TOKEN variable found. Good to go."  # not echo'd on screen to maintain.
+   fi   
 
 
-echo "### Ensure latest Node.js is installed:"  # See https://wilsonmar.github.io/node
+h2 "Ensure latest Node.js is installed:"  # See https://wilsonmar.github.io/node
    if ! command_exists node ; then
        fancy_echo "Installing latest node using brew..."
        brew install node
@@ -173,10 +268,10 @@ echo "### Ensure latest Node.js is installed:"  # See https://wilsonmar.github.i
           brew upgrade node
        fi
    fi
-   fancy_echo "Node: $(node --version)"  # v9.11.1
+   info "Node: $(node --version)"  # v9.11.1
 
 
-echo "### Ensure Go is installed:"  # See https://wilsonmar.github.io/golang
+h2 "Ensure Go is installed:"  # See https://wilsonmar.github.io/golang
    if ! command_exists go ; then
       fancy_echo "Installing go (for specific os version) using brew..."
       brew install go
@@ -269,10 +364,10 @@ echo "### Ensure Go is installed:"  # See https://wilsonmar.github.io/golang
           brew upgrade go
        fi
    fi
-   fancy_echo "$(go version)"  # Example: go version go1.11.2 darwin/amd64
+   info "$(go version)"  # Example: go version go1.11.2 darwin/amd64
 
 
-echo "### Ensure Pulumi is installed:"  # See https://wilsonmar.github.io/pulumi
+h2 "Ensure Pulumi is installed:"  # See https://pulumi.io/reference/cli/pulumi_login.html
    if ! command_exists pulumi ; then
       fancy_echo "Installing pulumi using brew..."
       brew install pulumi
@@ -282,10 +377,31 @@ echo "### Ensure Pulumi is installed:"  # See https://wilsonmar.github.io/pulumi
           brew upgrade pulumi
        fi
    fi
-   fancy_echo "Pulumi: $(pulumi version)"  # v0.16.7
+   info "Pulumi: $(pulumi version)"  # v0.16.7
 
-echo "### Populate MY_PULUMI_FOLDER $MY_PULUMI_FOLDER with examples and templates repo:"
 
+h2 "Populate Pulumi Access Token $PULUMI_ACCESS_FILE is setup:"  # See https://app.pulumi.com/account
+      # PULUMI_ACCESS_FILE="$HOME/.pulumi.env"
+      fancy_echo "Trying $PULUMI_ACCESS_FILE to populate PULUMI_ACCESS_TOKEN ..."
+      # Get Pulumi Access tokens from https://pulumi.io/reference/config.html
+      # (such as "wilsonmar-github-2018-12-14" for account-provider-date)
+      # Instead of storing access codes in the repository:
+      if [ -f "$PULUMI_ACCESS_FILE" ]; then  # file's there:
+         fancy_echo "Loading $PULUMI_ACCESS_FILE to populate PULUMI_ACCESS_TOKEN ..."
+         source "$PULUMI_ACCESS_FILE"
+      else
+         fancy_echo "File $PULUMI_ACCESS_FILE not found to populate PULUMI_ACCESS_TOKEN. Exiting."
+         exit
+      fi
+
+   if [ -z "$PULUMI_ACCESS_TOKEN" ]; then # it's empty:
+      fancy_echo "PULUMI_ACCESS_TOKEN variable not found. "  # do not echo'd on screen to maintain.
+   else  # loaded from prvious run:
+      fancy_echo "PULUMI_ACCESS_TOKEN variable found. Good to go."  # not echo'd on screen to maintain.
+   fi   
+
+
+h2 "Populate MY_PULUMI_FOLDER $MY_PULUMI_FOLDER with examples and templates repo:"
       if [ -d "$MY_PULUMI_FOLDER" ]; then
          fancy_echo "MY_PULUMI_FOLDER $MY_PULUMI_FOLDER already exists."
       else
@@ -343,7 +459,9 @@ echo "### Populate MY_PULUMI_FOLDER $MY_PULUMI_FOLDER with examples and template
       fi
 
 
-echo "### Ensure Docker app is installed:"  # See https://wilsonmar.github.io/docker
+h2 "Ensure Docker app is installed:"  # See https://wilsonmar.github.io/docker
+   # https://hub.docker.com/_/bash/
+   # https://hub.docker.com/_/bash/
    if ! command_exists docker ; then
       fancy_echo "Installing docker app using brew..."
       brew cask install docker  # to $HOME/Applications/
@@ -368,11 +486,12 @@ echo "### Ensure Docker app is installed:"  # See https://wilsonmar.github.io/do
          brew upgrade docker-machine-completion
        fi
    fi
-   fancy_echo "$(docker -v)"  # Docker version 17.09.0-ce, build afdb6d4
-      # PROTIP: $(docker version) displays more detail
+   info "$(docker -v)"  # Docker version 17.09.0-ce, build afdb6d4 # PROTIP: $(docker version) displays more detail
+   info "$(docker-compose -v)"  # docker-compose version 1.16.1, build 6d1ac21
+   echo "$(docker-machine -v)"  # docker-machine version 0.12.2, build 9371605
+      
 
-
-echo "### Ensure Docker app is running:"
+h2 "Ensure Docker app is running:"
    fancy_echo "Docker stats --no-stream ..."
    # Alternately, check for the existence of /var/run/docker.pid ?
    if (! docker stats --no-stream ); then # not running, so:
@@ -389,7 +508,7 @@ echo "### Ensure Docker app is running:"
    fi
 
 
-echo "### Remove Docker container already running:"
+h2 "Remove Docker container already running:"
    fancy_echo "ps -al | grep docker ..."
    ps -al | grep docker
 
@@ -399,14 +518,14 @@ echo "### Remove Docker container already running:"
       # CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
       # 89f8e3a79e22        nginx               "nginx -g 'daemon ..."   15 seconds ago      Up 14 seconds       0.0.0.0:8080->80/tcp   laughing_bardeen
    MY_DOCKER_CONTAINER_ID="$(docker ps | grep $MY_DOCKER_IMAGE | awk '{print $1}' )"
-   echo "MY_DOCKER_CONTAINER_ID=$MY_DOCKER_CONTAINER_ID"  # such as 89f8e3a79e22 
+   echo "Stopping MY_DOCKER_CONTAINER_ID=$MY_DOCKER_CONTAINER_ID ..."  # such as 89f8e3a79e22 
    if [ -z "$MY_DOCKER_CONTAINER_ID" ]; then
       # https://docs.docker.com/engine/reference/commandline/stop/
       docker stop "$MY_DOCKER_CONTAINER_ID"
    fi
 
 
-echo "### Ensure Docker container is running:"
+h2 "Ensure Docker container is running:"
 # Based on https://docs.docker.com/engine/reference/commandline/ps/
 # check if an exited container blocks, so you can remove it first prior to run the container:
 
@@ -420,7 +539,8 @@ echo "### Ensure Docker container is running:"
    fancy_echo "Docker run $MY_DOCKER_IMAGE ..."
    #docker run "$MY_DOCKER_COMMAND" &
       # SUCH AS: docker run -p 8080:80 nginx 
-   docker run -p 8080:80 "$MY_DOCKER_IMAGE"  &
+      # docker run -d -p 80:80 --name webserver nginx
+   docker run -p 8080:80 --name "$MY_DOCKER_NAME" "$MY_DOCKER_IMAGE"  &
       # RESPONSE is ps ID such as [1] 24467
 
    #fancy_echo "open http://localhost:8080 ..."
@@ -443,7 +563,7 @@ echo "### Ensure Docker container is running:"
    # describe at https://medium.com/@aelsabbahy/tutorial-how-to-test-your-docker-image-in-half-a-second-bbd13e06a4a9
 
 
-echo "### Run pulumi new to create new container:"
+h2 "Run pulumi new to create new container:"
 
    pulumi new javascript --dir "$MY_DOCKER_CONTAINER_ID" --yes
    		# Installing dependencies ...
@@ -455,7 +575,7 @@ echo "### Run pulumi new to create new container:"
 ls -al
 exit
 
-echo "### pulumi login:"
+h2 "pulumi login:"
 RESULT="$(pulumi login)"
       # RESPONSE: Logged into pulumi.com as wilsonmar (https://app.pulumi.com/wilsonmar)
 
@@ -464,10 +584,10 @@ MY_PULUMI_ID=$(pulumi whoami)
 # if MY_PULUMI_ID= blank
 echo "MY_PULUMI_ID=$MY_PULUMI_ID"
 
-echo "### list stacks associated with login:"
+h2 "list stacks associated with login:"
 pulumi stack ls
 
-echo "### Delete stack from prior run:"
+h2 "Delete stack from prior run:"
 pulumi stack rm "$MY_STACK_NAME" >>ANSWER
 "$MY_STACK_NAME" 
 ANSWER
@@ -501,7 +621,7 @@ pulumi stack output
 #    OUTPUT                  VALUE
 #    hostname                http://***.elb.us-west-2.amazonaws.com
 
-echo "### Display code using curl command:"
+h2 "Display code using curl command:"
 curl $(pulumi stack output hostname)
    #<html>
    #    <head><meta charset="UTF-8">
