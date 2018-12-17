@@ -1,0 +1,5 @@
+name: a4307b796f03
+runtime: nodejs
+description: A minimal JavaScript Pulumi program
+template:
+  description: A minimal JavaScript Pulumi program

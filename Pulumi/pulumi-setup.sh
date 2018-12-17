@@ -21,18 +21,18 @@
 # set -o verbose  # or set -v echoes all commands before executing, for debugging
     
 ### "Define run values statically:"
-         GOPATH="$HOME/gopkgs"   # edit this if you want.
-         GOHOME="$HOME/golang1"  # where you store custom go source code
-      PULUMI_ACCESS_FILE="$HOME/.pulumi.env"
-      AWS_ACCESS_FILE="$HOME/.aws.env"
-      AZURE_ACCESS_FILE="$HOME/.azure.env"
+GOPATH="$HOME/gopkgs"   # edit this if you want.
+GOHOME="$HOME/golang1"  # where you store custom go source code
+MY_AWS_PROFILE="default"
+MY_AWS_REGION="us-west-2"  # or "us-east-1", etc.
+PULUMI_ACCESS_FILE="$HOME/.pulumi.env"
+AZURE_ACCESS_FILE="$HOME/.azure.env"
 MY_PULUMI_FOLDER="$HOME/.pulumi" # default by sh installer.
 MY_PULUMI_USER="wilsonmar"
 MY_FOLDER="fargate-pulumi"
 MY_DOCKER_NAME="webserver"
 MY_DOCKER_IMAGE="nginx"
 MY_STACK_NAME="fargate-pulumi-aws-dev"  # generated?
-MY_AWS_REGION="us-west-2"
 RUNTYPE="normal"  # "runonly" or "upgrade" 
 DESTROY_AT_END_OF_RUN="true"  # "true" or "false"
 BASHFILE="$HOME/.bash_profile"  # on Macs
@@ -120,13 +120,13 @@ h2 "Ensure Xcode-CLI is installed:"  # See https://wilsonmar.github.io/xcode
       #if [[ "$( echo $XCODE | awk '{print $1}')" == xcode-select ]]; then
       info "$XCODE macOS version $(sw_vers -productVersion)"
    else
-      echo "Xcode-CLI not found. Installing ..."
+      note "Xcode-CLI not found. Installing ..."
       fancy_echo "Accept Apple's license ..."
       xcodebuild -license
          # RESPONSE: xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance
       info "$(xcode-select -p)"  # =/Library/Developer/CommandLineTools
 
-      fancy_echo "Installing Apple's command line tools (this takes a while) ..."
+      note "Installing Apple's command line tools (this takes a while) ..."
       # using /System/Library/CoreServices/Install Command Line Developer Tools.app
       xcode-select --install --reset  # /Library/Developer/CommandLineTools
       # Xcode installs its git to /usr/bin/git; recent versions of OS X (Yosemite and later) ship with stubs in /usr/bin, which take precedence over this git. 
@@ -134,7 +134,7 @@ h2 "Ensure Xcode-CLI is installed:"  # See https://wilsonmar.github.io/xcode
 
 h2 "Ensure Homebrew is installed:"  # See https://wilsonmar.github.io/homebrew
    if ! command_exists brew ; then
-       fancy_echo "Installing homebrew using Ruby..."
+       note "Installing homebrew using Ruby..."
        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
        brew tap caskroom/cask
    else
@@ -155,7 +155,7 @@ h2 "Ensure Homebrew is installed:"  # See https://wilsonmar.github.io/homebrew
 h2 "Ensure latest vscode is installed:"  # See https://wilsonmar.github.io/text-editors/#visual-studio-code
    if ! command_exists code ; then
       rm -rf "$HOME/Applications/Visual Studio Code.app"
-      fancy_echo "Installing latest vscode for specific OS using brew..."
+      note "Installing latest vscode for specific OS using brew..."
       brew cask install visual-studio-code
       git config --global core.editor code
    else
@@ -169,7 +169,7 @@ h2 "Ensure latest vscode is installed:"  # See https://wilsonmar.github.io/text-
 
 h2 "Ensure latest git is installed:"  # See https://wilsonmar.github.io/git
    if ! command_exists git ; then
-      fancy_echo "Installing latest git for specific OS using brew..."
+      note "Installing latest git for specific OS using brew..."
       brew install git   # /usr/local/Cellar/git/2.20.0: 1,526 files, 41.4MB
    else
       if [[ "$RUNTYPE" == upgrade ]]; then
@@ -182,7 +182,7 @@ h2 "Ensure latest git is installed:"  # See https://wilsonmar.github.io/git
 
 h2 "Python3 is a pre-requisite for aws & azure:"
    if ! command_exists python3 ; then
-      fancy_echo "Installing python3 (for specific os version) using brew..."
+      note "Installing python3 (for specific os version) using brew..."
       brew install python3
    else
        if [[ "$RUNTYPE" == upgrade ]]; then
@@ -195,7 +195,7 @@ h2 "Python3 is a pre-requisite for aws & azure:"
 
 h2 "Ensure pip3 install aws-sdk is installed:"
    if ! command_exists aws ; then
-      fancy_echo "Installing awscli using PIP3 ..."
+      note "Installing awscli using PIP3 ..."
       pip3 install awscli --upgrade --user
    else
       if [[ "$RUNTYPE" == upgrade ]]; then
@@ -206,32 +206,29 @@ h2 "Ensure pip3 install aws-sdk is installed:"
    fi
    info "$(aws --version)"  # aws-cli/1.11.160 Python/2.7.10 Darwin/17.4.0 botocore/1.7.18
 
-h2 "Populate AWS credentials from $AWS_ACCESS_FILE :"  # See https://wilsonmar.github.io/amazon-onboarding
+
+   AWS_CREDENTIALS_FILE="$HOME/.aws/credentials"  # by default using aws config
+h2 "Populate AWS credentials from $AWS_CREDENTIALS_FILE :"  # See https://wilsonmar.github.io/amazon-onboarding
    # Instead of storing access codes in the repository:
-   # AWS_ACCESS_FILE="$HOME/.aws.env"
-   if [ -f "$AWS_ACCESS_FILE" ]; then  # file's there:
-      if grep -q "<YOUR_DEFAULT_ACCESS_KEY_ID>" "$AWS_ACCESS_FILE" ; then
-         warnError "File $AWS_ACCESS_FILE still contains template token values".
-         warnError "Please update with token based on https://???"
-      else
-         fancy_echo "File $AWS_ACCESS_FILE found. Good to go."  # not echo'd on screen to maintain secrecy.
-      fi
-   else
-      warnError "File $AWS_ACCESS_FILE not found to populate AWS_ACCESS_KEY_ID. Downloding template..."
-      curl --url "https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Pulumi/.aws.env" \
-           --output "$AWS_ACCESS_FILE"  # 347 received.
+   AWS_CONFIG_FILE="$AWS_CREDENTIALS_FILE" # environment variable
+   if [ ! -f "$AWS_CREDENTIALS_FILE" ]; then  # file's not there:
+      warnError "File $AWS_CREDENTIALS_FILE not found to populate AWS_ACCESS_KEY_ID. Running aws config ..."
+      aws config profile "$MY_AWS_PROFILE"
+         # See https://docs.aws.amazon.com/cli/latest/reference/configure/index.html
       warnError "Please update with token based on https://pulumi.io/quickstart/aws/setup.html"
+   else
+      success "File $AWS_CREDENTIALS_FILE found. Good to go."  # not echo'd on screen to maintain secrecy.
    fi
    # aws cli will read file.
 
 
 h2 "Ensure Azure CLI is installed:" # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos?view=azure-cli-latest
    if ! command_exists az ; then
-      fancy_echo "Installing azure-cli (for specific os version) using brew..."
+      note "Installing azure-cli (for specific os version) using brew..."
       brew install azure-cli  # /usr/local/Cellar/azure-cli/2.0.52: 19,791 files, 87.8MB
    else
        if [[ "$RUNTYPE" == upgrade ]]; then
-          fancy_echo "Upgrading azure-cli latest ..."
+          note "Upgrading azure-cli latest ..."
           brew upgrade azure-cli
        fi
    fi
@@ -241,7 +238,7 @@ h2 "Populate Azure credentials from $AZURE_ACCESS_FILE"
    # Instead of storing access codes in the repository:
    # AZURE_ACCESS_FILE="$HOME/.azure.env"
    if [ ! -f "$AZURE_ACCESS_FILE" ]; then  # file's there:
-      warnError "File $AZURE_ACCESS_FILE not found to populate AZURE_ACCESS_TOKEN. Downloding template..."
+      note "File $AZURE_ACCESS_FILE not found to populate AZURE_ACCESS_TOKEN. Downloding template..."
       curl --url "https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Pulumi/.azure.env" \
            --output "$AZURE_ACCESS_FILE"  # 181 bytes received.
       warnError "Please update with token based on https://???"
@@ -250,13 +247,13 @@ h2 "Populate Azure credentials from $AZURE_ACCESS_FILE"
          warnError "File $AZURE_ACCESS_FILE still contains template token values".
          warnError "Please update with token based on https://???"
       else
-         fancy_echo "File $AZURE_ACCESS_FILE found. Good to go."  # not echo'd on screen to maintain secrecy.
+         success "File $AZURE_ACCESS_FILE found. Good to go."  # not echo'd on screen to maintain secrecy.
       fi
    fi
 
 h2 "Ensure latest Node.js is installed:"  # See https://wilsonmar.github.io/node
    if ! command_exists node ; then
-       fancy_echo "Installing latest node using brew..."
+       note "Installing latest node using brew..."
        brew install node
    else
        if [[ "$RUNTYPE" == upgrade ]]; then
@@ -269,7 +266,7 @@ h2 "Ensure latest Node.js is installed:"  # See https://wilsonmar.github.io/node
 
 h2 "Ensure Go is installed:"  # See https://wilsonmar.github.io/golang
    if ! command_exists go ; then
-      fancy_echo "Installing go (for specific os version) using brew..."
+      note "Installing go (for specific os version) using brew..."
       brew install go
          # RESPONSE: /usr/local/Cellar/go/1.11.2: 9,282 files, 404MB
       if grep -q "GOROOT=" "$BASHFILE" ; then    
@@ -285,7 +282,7 @@ h2 "Ensure Go is installed:"  # See https://wilsonmar.github.io/golang
 
       # A GOPATH folder is hold libraries requested by `go get` commands:
       if grep -q "GOPATH=" "$BASHFILE" ; then
-         fancy_echo "export GOPATH= already in $BASHFILE"
+         note "export GOPATH= already in $BASHFILE"
       else
          # Make folder to Store Go packages:
          if [ ! -d "$GOPATH" ]; then
@@ -300,7 +297,7 @@ h2 "Ensure Go is installed:"  # See https://wilsonmar.github.io/golang
 
       PACKAGE="github.com/stretchr/testify"
       if [ ! -d "$GOPATH/src/github.com/stretchr/testify" ]; then
-               fancy_echo "Populating $GOPATH with the most popular Go library ..."
+               note "Populating $GOPATH with the most popular Go library ..."
             # per https://medium.com/google-cloud/analyzing-go-code-with-bigquery-485c70c3b451
          go get "$PACKAGE"
          #ls "$GOPATH/src/github.com/stretchr/testify"
@@ -308,7 +305,7 @@ h2 "Ensure Go is installed:"  # See https://wilsonmar.github.io/golang
 
       PACKAGE="github.com/derekparker/delve/cmd/dlv"
       if [ ! -d "$GOPATH/src/github.com/derekparker/delve/cmd/dlv" ]; then
-         fancy_echo "Populating $GOPATH with the Delve debugger ..."
+         note "Populating $GOPATH with the Delve debugger ..."
             # per https://github.com/derekparker/delve/blob/master/Documentation/installation/osx/install.md
          go get -u "$PACKAGE"
 
@@ -318,7 +315,7 @@ h2 "Ensure Go is installed:"  # See https://wilsonmar.github.io/golang
 
       # $GOHOME to hold custom Go code (Git folders):
       if grep -q "GOHOME=" "$BASHFILE" ; then
-         fancy_echo "export GOHOME= already in $BASHFILE"
+         note "export GOHOME= already in $BASHFILE"
       else
          # GOHOME="$HOME/golang1"  # where you store custom go source code
             # export GOHOME="$HOME/gits/wilsonmar/golang-samples"
@@ -356,16 +353,16 @@ h2 "Ensure Go is installed:"  # See https://wilsonmar.github.io/golang
 
    else
        if [[ "$RUNTYPE" == upgrade ]]; then
-          fancy_echo "Upgrading go (for current OS) ..."
+          note "Upgrading go (for current OS) ..."
           brew upgrade go
        fi
    fi
    info "$(go version)"  # Example: go version go1.11.2 darwin/amd64
 
 
-h2 "Ensure Pulumi latest is installed:"  # See https://pulumi.io/reference/cli/pulumi_login.html
+h2 "Ensure latest Pulumi app is installed:"  # See https://pulumi.io/reference/cli/pulumi_login.html
    if ! command_exists pulumi ; then
-      fancy_echo "Installing pulumi using brew..."
+      note "Installing pulumi using brew..."
       brew install pulumi
    else
        if [[ "$RUNTYPE" == upgrade ]]; then
@@ -384,12 +381,11 @@ h2 "Ensure Pulumi latest is installed:"  # See https://pulumi.io/reference/cli/p
       info "$(pulumi version)"  # v0.16.8
    fi
 
-
-h2 "Populate Pulumi Access Token $PULUMI_ACCESS_FILE is setup:"  # See https://app.pulumi.com/account
+h2 "Populate Pulumi Access Token $PULUMI_ACCESS_FILE :"  # See https://app.pulumi.com/account
    # Instead of storing access codes in the repository:
    # PULUMI_ACCESS_FILE="$HOME/.pulumi.env" defined at top of this file.
    if [ ! -f "$PULUMI_ACCESS_FILE" ]; then  # file's not there:
-      fancy_echo "File $PULUMI_ACCESS_FILE not found to populate PULUMI_ACCESS_TOKEN. Downloding template..."
+      note "File $PULUMI_ACCESS_FILE not found to populate PULUMI_ACCESS_TOKEN. Downloding template..."
       curl --url "https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Pulumi/.pulumi.env" \
            --output "$PULUMI_ACCESS_FILE"  # 181 bytes received.
       warnError "Please update with token based on https://pulumi.io/reference/config.html"
@@ -399,29 +395,31 @@ h2 "Populate Pulumi Access Token $PULUMI_ACCESS_FILE is setup:"  # See https://a
          warnError "Please update with token based on https://pulumi.io/reference/config.html"
             # (such as "wilsonmar-github-2018-12-14" for account-provider-date)
       else
-        fancy_echo "Loading $PULUMI_ACCESS_FILE to populate PULUMI_ACCESS_TOKEN ..."
-        source "$PULUMI_ACCESS_FILE"   # not echo'd on screen to maintain secrecy.
-        if [ -z "$PULUMI_ACCESS_TOKEN" ]; then # it's empty:
-         fancy_echo "PULUMI_ACCESS_TOKEN variable not loaded from $PULUMI_ACCESS_FILE."
-      else
-         fancy_echo "PULUMI_ACCESS_TOKEN variable found. Good to go."  # not echo'd on screen to maintain.
+         note "Loading $PULUMI_ACCESS_FILE to populate PULUMI_ACCESS_TOKEN ..."
+         source "$PULUMI_ACCESS_FILE"   # not echo'd on screen to maintain secrecy.
+         if [ -z "$PULUMI_ACCESS_TOKEN" ]; then # it's empty:
+            warnError "PULUMI_ACCESS_TOKEN variable not loaded from $PULUMI_ACCESS_FILE."
+         else
+            success "PULUMI_ACCESS_TOKEN variable loaded. Good to go. Not echo'd on screen to maintain privacy."
+            # echo "PULUMI_ACCESS_TOKEN=$PULUMI_ACCESS_TOKEN"   # not echo'd on screen to maintain secrecy.
+            pulumi login --local
+         fi
       fi
    fi
 
-exit
 
-h2 "Populate MY_PULUMI_FOLDER $MY_PULUMI_FOLDER with examples and templates repo:"
+h2 "Create MY_PULUMI_FOLDER $MY_PULUMI_FOLDER:"
       if [ -d "$MY_PULUMI_FOLDER" ]; then
-         fancy_echo "MY_PULUMI_FOLDER $MY_PULUMI_FOLDER already exists."
+         note "MY_PULUMI_FOLDER $MY_PULUMI_FOLDER already exists."
       else
-         fancy_echo "Creating $MY_PULUMI_FOLDER ..."
+         note "Creating $MY_PULUMI_FOLDER ..."
          mkdir "$MY_PULUMI_FOLDER"
       fi
 
 
-      # TODO: and empty
+h2 "Populate $MY_PULUMI_FOLDER/examples repo from Pulumi:"
       if [ -d "$MY_PULUMI_FOLDER/examples" ]; then
-         fancy_echo "MY_PULUMI_FOLDER/examples already exists. Updating..."
+         note "MY_PULUMI_FOLDER/examples already exists. Updating..."
          pushd "$MY_PULUMI_FOLDER/examples" >/dev/null
          git remote -v
          git pull 
@@ -431,7 +429,7 @@ h2 "Populate MY_PULUMI_FOLDER $MY_PULUMI_FOLDER with examples and templates repo
          ls 
          popd >/dev/null
       else
-         fancy_echo "Creating $MY_PULUMI_FOLDER/examples ..."
+         note "Creating $MY_PULUMI_FOLDER/examples ..."
          pushd "$MY_PULUMI_FOLDER" >/dev/null
          # mkdir "$MY_PULUMI_FOLDER" is done by clone:
          git clone https://github.com/pulumi/examples  # using master and other branches
@@ -439,23 +437,24 @@ h2 "Populate MY_PULUMI_FOLDER $MY_PULUMI_FOLDER with examples and templates repo
          echo ">>> Last commit:"
          git log -n 1
          echo ">>> List folders and files:"
-         ls 
+         # ls   # list of all files.
          popd >/dev/null
       fi
 
 
+h2 "Populate $MY_PULUMI_FOLDER/templates repo from Pulumi:"
       if [ -d "$MY_PULUMI_FOLDER/templates" ]; then
-         fancy_echo "MY_PULUMI_FOLDER/templates already exists. Updating..."
+         note "MY_PULUMI_FOLDER/templates already exists. Updating..."
          pushd "$MY_PULUMI_FOLDER/templates" >/dev/null
          git remote -v
          git pull 
          echo ">>> Last commit:"
          git log -n 1
          echo ">>> List folders and files:"
-         ls 
+         # ls   # list of all files.
          popd >/dev/null
       else
-         fancy_echo "Creating $MY_PULUMI_FOLDER/templates ..."
+         note "Creating $MY_PULUMI_FOLDER/templates ..."
          pushd "$MY_PULUMI_FOLDER" >/dev/null
          # mkdir "$MY_PULUMI_FOLDER" is done by clone:
          git clone https://github.com/pulumi/templates  --depth=1  # using master branch only
@@ -468,16 +467,14 @@ h2 "Populate MY_PULUMI_FOLDER $MY_PULUMI_FOLDER with examples and templates repo
       fi
 
 
-h2 "Ensure Docker app is installed:"  # See https://wilsonmar.github.io/docker
+h2 "Ensure Docker app is installed:"  # See https://wilsonmar.github.io/docker-setup
    # https://hub.docker.com/_/bash/
    # https://hub.docker.com/_/bash/
    if ! command_exists docker ; then
-      fancy_echo "Installing docker app using brew..."
+      note "Installing docker app using brew..."
       brew cask install docker  # to $HOME/Applications/
           # Docker whale icon should now appear in your mac's top status menu.
           # PROTIP: The GUI app cask install includes docker command line utilities.
-      docker run hello-world
-
       brew install bash-completion  # for specific os version
          # /usr/local/Cellar/bash-completion/1.3_3: 189 files, 607.8KB
       brew install docker-completion
@@ -486,7 +483,7 @@ h2 "Ensure Docker app is installed:"  # See https://wilsonmar.github.io/docker
       brew install docker-machine-completion
    else
       if [[ "$RUNTYPE" == upgrade ]]; then
-         fancy_echo "Upgrading docker app ..."
+         note "Upgrading docker app ..."
          brew cask upgrade docker
 
          brew upgrade bash-completion
@@ -497,11 +494,20 @@ h2 "Ensure Docker app is installed:"  # See https://wilsonmar.github.io/docker
    fi
    info "$(docker -v)"  # Docker version 17.09.0-ce, build afdb6d4 # PROTIP: $(docker version) displays more detail
    info "$(docker-compose -v)"  # docker-compose version 1.16.1, build 6d1ac21
-   echo "$(docker-machine -v)"  # docker-machine version 0.12.2, build 9371605
+   info "$(docker-machine -v)"  # docker-machine version 0.12.2, build 9371605
       
 
-h2 "Ensure Docker app is running:"
-   fancy_echo "Docker stats --no-stream ..."
+h2 "Ensure Docker  hello world is runnable:"  # See https://wilsonmar.github.io/docker-setup
+   
+   docker run hello-world
+
+   docker history hello-world
+      # MAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+      # 4ab4c602aa5e        3 months ago        /bin/sh -c #(nop)  CMD ["/hello"]               0B                  
+
+
+h2 "Ensure Docker app on MacOS is running:"
+   note "Docker stats --no-stream ..."
    # Alternately, check for the existence of /var/run/docker.pid ?
    if (! docker stats --no-stream ); then # not running, so:
       open "$HOME/Applications/Docker.app" # on macOS, no response if good.
@@ -517,11 +523,17 @@ h2 "Ensure Docker app is running:"
    fi
 
 
-h2 "Remove Docker container already running:"
-   fancy_echo "ps -al | grep docker ..."
+h2 "Find and kill process initiated in previous run:"
+   # Get process
+
+   # kill proces
+ 
+
+h2 "Find and remove Docker container already running:"
+   note "ps -al | grep docker ..."
    ps -al | grep docker
 
-   fancy_echo "docker ps ..."
+   note "docker ps ..."
    docker ps
       # SAMple rsponse;
       # CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
@@ -531,6 +543,8 @@ h2 "Remove Docker container already running:"
    if [ -z "$MY_DOCKER_CONTAINER_ID" ]; then
       # https://docs.docker.com/engine/reference/commandline/stop/
       docker stop "$MY_DOCKER_CONTAINER_ID"
+      # Get the JSON associated with a 12-character container ID:
+      docker inspect "$MY_DOCKER_CONTAINER_ID"
    fi
 
 
@@ -538,14 +552,16 @@ h2 "Ensure Docker container is running:"
 # Based on https://docs.docker.com/engine/reference/commandline/ps/
 # check if an exited container blocks, so you can remove it first prior to run the container:
 
-   fancy_echo "Docker images:"
+   note "Docker images:"
    docker images
       # RESPONSE SAMPLE:
       # REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
       # nginx               latest              568c4670fa80        2 weeks ago         109MB
       # hello-world         latest              4ab4c602aa5e        3 months ago        1.84kB   
 
-   fancy_echo "Docker run $MY_DOCKER_IMAGE ..."
+   # NOTE: More folders containing Dockerfile are at https://github.com/wilsonmar/Dockerfiles
+
+   note "Docker run $MY_DOCKER_IMAGE ..."
    #docker run "$MY_DOCKER_COMMAND" &
       # SUCH AS: docker run -p 8080:80 nginx 
       # docker run -d -p 80:80 --name webserver nginx
@@ -555,7 +571,7 @@ h2 "Ensure Docker container is running:"
    #fancy_echo "open http://localhost:8080 ..."
    # open http://localhost:8080  # in default browser
 
-   fancy_echo "ps -al | grep docker ..."
+   note "ps -al | grep docker ..."
    ps -al | grep docker
 
    fancy_echo "docker ps ..."
@@ -585,8 +601,9 @@ ls -al
 exit
 
 h2 "pulumi login:"
-RESULT="$(pulumi login)"
+   RESULT="$(pulumi login)"  # to cloud
       # RESPONSE: Logged into pulumi.com as wilsonmar (https://app.pulumi.com/wilsonmar)
+   echo "$RESULT"
 
 ### Verify Pulumi credentials
 MY_PULUMI_ID=$(pulumi whoami)
@@ -610,28 +627,32 @@ pulumi stack init "$MY_STACK_NAME"
 		
 exit
 
-### Configure Pulumi to use AWS Fargate, which is currently only available in us-east-1, us-east-2, us-west-2, and eu-west-1:
-pulumi config set aws:region "$MY_AWS_REGION"
 
-pulumi config set cloud-aws:useFargate true
+h2 "Configure Pulumi to use AWS Fargate, which is currently only available in us-east-1, us-east-2, us-west-2, and eu-west-1:"
+
+   pulumi config set aws:region "$MY_AWS_REGION"
+
+   pulumi config set cloud-aws:useFargate true
 
 exit
 
-### Restore NPM modules via npm install or yarn install.
-### Preview and deploy the app via pulumi up. 
-pulumi up
+h2 "Restore NPM modules via npm install or yarn install."
+   ### Preview and deploy the app via pulumi up. 
+   pulumi up
 	# error: no Pulumi.yaml project file found
 	# The preview will take a few minutes, as it builds a Docker container. A total of 19 resources are created.
 
 
-### View the endpoint URL, and run curl:
-pulumi stack output
-#Current stack outputs (1)
-#    OUTPUT                  VALUE
-#    hostname                http://***.elb.us-west-2.amazonaws.com
+h2 "View endpoint URL, and run curl:"
+
+   pulumi stack output
+   #Current stack outputs (1)
+   #    OUTPUT                  VALUE
+   #    hostname                http://***.elb.us-west-2.amazonaws.com
 
 h2 "Display code using curl command:"
-curl $(pulumi stack output hostname)
+
+   curl $(pulumi stack output hostname)
    #<html>
    #    <head><meta charset="UTF-8">
    #    <title>Hello, Pulumi!</title></head>
@@ -640,17 +661,31 @@ curl $(pulumi stack output hostname)
    #    <p>Made with ❤️ with <a href="https://pulumi.com">Pulumi</a></p>
    #</body></html>
 
-### To view the runtime logs from the container:
-pulumi logs --follow
+h2 "View runtime logs from the container:"
+
+   pulumi logs --follow
 	# Collecting logs for stack container-quickstart-dev since 2018-05-22T14:25:46.000-07:00.
 	# 2018-05-22T15:33:22.057-07:00[                  pulumi-nginx] 172.31.13.248 - - [22/May/2018:22:33:22 +0000] "GET / HTTP/1.1" 200 189 "-" "curl/7.54.0" "-"
 
-### Clean up resources:
-# and answer the confirmation question at the prompt.
-pulumi destroy --yes
+h2 "Clean up resources (yes for confirmation question at the prompt):"
 
+   pulumi destroy --yes
 
-### Delete stack
+h2 "Remove stack:"
 pulumi stack rm "$MY_STACK_NAME" <<ANSWERS
 "$MY_STACK_NAME" 
 ANSWERS
+
+
+h2 "List Docker images pulled:"
+
+   docker images -a -q
+
+h2 "Remove all Docker images pulled:"
+
+   docker rmi $(docker images -a -q)
+
+h2 "Remove Dangling Docker images:"
+
+   docker rmi $(docker images -f dangling=true -q)
+
