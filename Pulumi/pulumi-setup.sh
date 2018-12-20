@@ -108,7 +108,7 @@ LOG_DATETIME=$(date +%Y-%m-%dT%H:%M:%S%z)-$((1 + RANDOM % 1000))
 clear  # screen
 echo "$THISPGM starting at $LOG_DATETIME ..."
       uname -rvm  # see https://wilsonmar.github.io/mac-osx-terminal/#operating-system-kernel
-
+   getconf LONG_BIT  # 64 (vs 32)
 
 h2 "Ensure Xcode-CLI is installed:"  # See https://wilsonmar.github.io/xcode
    # Ensure Apple's command line tools (such as cc) are installed by node:
