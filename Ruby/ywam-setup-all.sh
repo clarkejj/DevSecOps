@@ -75,9 +75,41 @@ elif [[ "$UNAME_PREFIX" == 'MINGW64_NT' ]]; then  # MINGW64_NT-6.1 or MINGW64_NT
 fi
 echo "Platform: $platform"
 
+
+if [[ $platform == 'linux' ]]; then
+
+         echo_c "lsb_release -rs"  # Ubuntu release 18.04
+      echo -e "$(lsb_release -rs)"
+
+      echo_c "apt --version"  # package manager for Ubuntu
+      echo "$(apt --version)"  # apt 1.6.3ubuntu0.1 (amd64)
+
+      echo_c "git --version" 
+      echo "$(git --version)" # git version 2.17.1
+
+      echo_c "free -m" 
+      echo "$(free -m)" # git version 2.17.1
+
+      echo_c "vmstat -s"  # Virtual Memory: 
+      echo "$(vmstat -s)" # 61944 K free memory
+
+      echo_c "grep MemFree /proc/meminfo" 
+      echo "$(grep MemFree /proc/meminfo)" # MemFree: 67232 kB
+fi
+
 ####
-# Ruby
-# run Ruby gems
+      echo_c "sudo apt-get update" 
+              sudo apt-get update
+
+# instead on using Gemfile:
+# sudo apt-get install build-essential libssl-dev libyaml-dev libreadline-dev openssl curl git-core zlib1g-dev bison libxml2-dev libxslt1-dev libcurl4-openssl-dev nodejs libsqlite3-dev sqlite3
+
+      echo_c "sudo apt-get install ruby-full" 
+              sudo apt-get install ruby-full
+
+      echo_c "ruby -v" 
+              ruby -v
+
 ####
 
 FREE_DISKBLOCKS_END="$(df -P | awk '{print $4}' | sed -n 2p)"
