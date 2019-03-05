@@ -111,10 +111,10 @@ fi
 # instead on using Gemfile:
 # sudo apt-get install build-essential libssl-dev libyaml-dev libreadline-dev openssl curl git-core zlib1g-dev bison libxml2-dev libxslt1-dev libcurl4-openssl-dev nodejs libsqlite3-dev sqlite3
 
-      echo_c "sudo apt-get install ruby-full" 
-              sudo apt-get install ruby-full
+      echo_c "sudo apt-get install ruby-full -y" 
+              sudo apt-get install ruby-full -y
 
-      echo_c "ruby -v" 
+      echo_c "ruby -v" # ruby 2.5.1p57 (2018-03-29 revision 63029) [x86_64-linux-gnu]
               ruby -v
 
 ####
