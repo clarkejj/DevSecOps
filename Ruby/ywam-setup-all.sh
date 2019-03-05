@@ -55,7 +55,7 @@ FREE_DISKBLOCKS_START="$(df -P | awk '{print $4}' | sed -n 2p)"  # e.g. 34277120
 LOG_PREFIX=$(date +%Y-%m-%dT%H:%M:%S%z)-$((1 + RANDOM % 1000))
    # ISO-8601 date plus RANDOM=$((1 + RANDOM % 1000))  # 3 digit random number.
    #  LOGFILE="$0.$LOG_PREFIX.log"
-echo_f "1.1 $0 within $PWD "
+echo_f "1.1 $0 within $PWD of user: $(whoami)"
 echo_g "starting at $LOG_PREFIX with $FREE_DISKBLOCKS_START blocks free ..."
 
 ### OS detection:
@@ -74,7 +74,6 @@ elif [[ "$UNAME_PREFIX" == 'MINGW64_NT' ]]; then  # MINGW64_NT-6.1 or MINGW64_NT
               platform='windows'  # systeminfo on windows https://en.wikipedia.org/wiki/MinGW
 fi
 echo "Platform: $platform"
-echo "whoami: $(whoami)"
 
 ####
 # Ruby
