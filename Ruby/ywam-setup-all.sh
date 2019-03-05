@@ -148,7 +148,7 @@ fi
       git clone --branch "$GIT_BRANCH" --single-branch https://github.com/ipoconnection/ipo-web.git  
       cd "$GIT_BRANCH"
       ls
-      echo_c "Now at $pwd"  # present working directory
+      echo_c "Now at $PWD"  # present working directory
 
       echo_c "sudo apt-get install -y ruby-bundler"
               sudo apt-get install -y ruby-bundler
