@@ -81,6 +81,12 @@ if [[ $platform == 'linux' ]]; then
          echo_c "lsb_release -rs"  # Ubuntu release 18.04
       echo -e "$(lsb_release -rs)"
 
+      echo_c "lscpu"
+      echo "$(lscpu)"
+
+      echo_c "lshw -short"
+      echo "$(lshw -short)"
+
       echo_c "apt --version"  # package manager for Ubuntu
       echo "$(apt --version)"  # apt 1.6.3ubuntu0.1 (amd64)
 
@@ -95,6 +101,7 @@ if [[ $platform == 'linux' ]]; then
 
       echo_c "grep MemFree /proc/meminfo" 
       echo "$(grep MemFree /proc/meminfo)" # MemFree: 67232 kB
+      
 fi
 
 ####
