@@ -126,6 +126,9 @@ fi
       cd "$GIT_BRANCH"
       ls
 
+      echo_c "sudo apt-get install ruby-bundler -y" 
+              sudo apt-get install ruby-bundler -y
+
       echo_c "bundle install"
       echo "$(bundle install)"
 
