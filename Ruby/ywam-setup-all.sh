@@ -120,6 +120,12 @@ fi
       echo_c "ruby -v" # ruby 2.5.1p57 (2018-03-29 revision 63029) [x86_64-linux-gnu]
               ruby -v
 
+      echo_c "Get from GitHub a specific branch:"
+      GIT_BRANCH="upgrade-rails-4.0"
+      git clone --branch "$GIT_BRANCH" --single-branch https://github.com/ipoconnection/ipo-web.git  
+      cd "$GIT_BRANCH"
+      ls
+
 ####
 
 FREE_DISKBLOCKS_END="$(df -P | awk '{print $4}' | sed -n 2p)"
