@@ -114,11 +114,25 @@ fi
 # instead on using Gemfile:
 # sudo apt-get install build-essential libssl-dev libyaml-dev libreadline-dev openssl curl git-core zlib1g-dev bison libxml2-dev libxslt1-dev libcurl4-openssl-dev nodejs libsqlite3-dev sqlite3
 
-      echo_c "sudo apt-get install ruby-full -y" 
-              sudo apt-get install ruby-full -y
+      echo_c "sudo apt-get install ruby-build -y" 
+              sudo apt-get install ruby-build -y
+
+      echo_c "rbenv install 2.3.7  # CAUTION: Back version to avoid Nokigiri issue." 
+              rbenv install 2.3.7
+
+#      echo_c "sudo apt-get install ruby-full -y" 
+#              sudo apt-get install ruby-full -y
 
       echo_c "ruby -v" # ruby 2.5.1p57 (2018-03-29 revision 63029) [x86_64-linux-gnu]
               ruby -v
+
+
+      echo_c "sudo apt install libpq-dev"
+              sudo apt install libmagickwand-dev
+
+      echo_c "sudo apt install libpq-dev"
+              sudo apt install libmagickwand-dev
+
 
       echo_c "Get from GitHub a specific branch:"
       GIT_BRANCH="upgrade-rails-4.0"
