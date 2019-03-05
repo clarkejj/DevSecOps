@@ -126,6 +126,9 @@ fi
       cd "$GIT_BRANCH"
       ls
 
+      echo_c "bundle install"
+      echo "$(bundle install)"
+
 ####
 
 FREE_DISKBLOCKS_END="$(df -P | awk '{print $4}' | sed -n 2p)"
