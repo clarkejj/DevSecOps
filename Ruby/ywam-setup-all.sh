@@ -4,7 +4,7 @@
 # To minimize troubleshooting, this script "types" what the reader is asked to manually type in the tutorial at
 # how-to-contribute.md at https://github.com/ipoconnection/ipo-web
 # chmod +x git-basics.sh | then copy this command to paste in your terminal:
-# sh -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Ruby/ywam-setup-all.sh)"
+# bash -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Ruby/ywam-setup-all.sh)"
 
 # This is free software; see the source for copying conditions. There is NO
 # warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
