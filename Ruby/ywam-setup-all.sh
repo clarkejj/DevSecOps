@@ -142,7 +142,7 @@ fi
    # Delete previous folder:
       GIT_BRANCH="upgrade-rails-4.0"
       GIT_REPO="ipo-web"
-      echo_c "Remove folder added by GitHub command:"
+      echo_c "Remove folder \"$GIT_REPO\" added by prior GitHub command..."
       rm -rf "$GIT_REPO"
       
       echo_c "Get from GitHub a specific branch:"
