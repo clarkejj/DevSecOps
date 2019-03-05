@@ -126,6 +126,9 @@ fi
       echo_c "ruby -v" # ruby 2.5.1p57 (2018-03-29 revision 63029) [x86_64-linux-gnu]
               ruby -v
 
+      # https://stackoverflow.com/questions/20559255/error-while-installing-json-gem-mkmf-rb-cant-find-header-files-for-ruby
+      sudo apt-get install ruby`ruby -e 'puts RUBY_VERSION[/\d+\.\d+/]'`-dev
+         # which issues sudo apt-get install ruby-dev  ruby2.0-dev  ruby2.2-dev  ruby2.3-dev
 
       echo_c "sudo apt install -y libpq-dev"
               sudo apt install -y libmagickwand-dev
