@@ -133,7 +133,7 @@ fi
       echo_c "sudo apt install -y libpq-dev"
               sudo apt install -y libmagickwand-dev
 
-
+   # Delete previous folder:
       GIT_BRANCH="upgrade-rails-4.0"
       echo_c "Remove folder added by GitHub command:"
       rm -rf "ipo-web"
@@ -142,10 +142,10 @@ fi
       git clone --branch "$GIT_BRANCH" --single-branch https://github.com/ipoconnection/ipo-web.git  
       cd "$GIT_BRANCH"
       ls
+      echo_c "Now at $pwd"  # present working directory
 
       echo_c "sudo apt-get install -y ruby-bundler"
               sudo apt-get install -y ruby-bundler
-
       echo_c "bundle install"
       echo "$(bundle install)"
 
