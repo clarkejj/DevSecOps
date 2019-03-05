@@ -146,7 +146,8 @@ fi
       rm -rf "$GIT_REPO"
       
       echo_c "Get from GitHub a specific branch:"
-      git clone --branch "$GIT_BRANCH" --single-branch https://github.com/ipoconnection/ipo-web.git  
+      git clone --branch "$GIT_BRANCH" --single-branch https://github.com/ipoconnection/ipo-web.git
+      echo_c "Now at $PWD"  # present working directory DEBUGGING      
       cd "$GIT_REPO"
       ls
       echo_c "Now at $PWD"  # present working directory
