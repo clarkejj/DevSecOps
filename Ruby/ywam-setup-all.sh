@@ -1,10 +1,10 @@
 #!/bin/bash
-# This is git-basics.sh within https://github.com/wilsonmar/git-utilities
+# This is ywam-setup-all.sh within https://github.com/wilsonmar/git-utilities
 # by WilsonMar@gmail.com
 # To minimize troubleshooting, this script "types" what the reader is asked to manually type in the tutorial at
-# https://wilsonmar.github.io/git-basics
+# how-to-contribute.md at https://github.com/ipoconnection/ipo-web
 # chmod +x git-basics.sh | then copy this command to paste in your terminal:
-# bash -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/git-utilities/master/git-basics.sh)"
+# sh -c "$(curl -fsSL https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Ruby/ywam-setup-all.sh)"
 
 # This is free software; see the source for copying conditions. There is NO
 # warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -77,7 +77,7 @@ echo "Platform: $platform"
 
 ####
 # Ruby
-
+# run Ruby gems
 ####
 
 FREE_DISKBLOCKS_END="$(df -P | awk '{print $4}' | sed -n 2p)"
