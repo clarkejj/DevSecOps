@@ -114,8 +114,11 @@ fi
 # instead on using Gemfile:
 # sudo apt-get install build-essential libssl-dev libyaml-dev libreadline-dev openssl curl git-core zlib1g-dev bison libxml2-dev libxslt1-dev libcurl4-openssl-dev nodejs libsqlite3-dev sqlite3
 
-      echo_c "sudo apt-get install ruby-build -y" 
-              sudo apt-get install ruby-build -y
+      echo_c "sudo apt-get install -y pwgen  # password generator" 
+              sudo apt-get install -y pwgen
+
+      echo_c "sudo apt-get install -y ruby-build" 
+              sudo apt-get install -y ruby-build
 
       echo_c "rbenv install 2.3.7  # CAUTION: Back version to avoid Nokigiri issue." 
               rbenv install 2.3.7
