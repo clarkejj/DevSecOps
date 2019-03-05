@@ -74,6 +74,7 @@ elif [[ "$UNAME_PREFIX" == 'MINGW64_NT' ]]; then  # MINGW64_NT-6.1 or MINGW64_NT
               platform='windows'  # systeminfo on windows https://en.wikipedia.org/wiki/MinGW
 fi
 echo "Platform: $platform"
+echo "whoami: $(whoami)"
 
 ####
 # Ruby
