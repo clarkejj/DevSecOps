@@ -99,8 +99,8 @@ if [[ $platform == 'linux' ]]; then
       echo_c "vmstat -s"  # Virtual Memory: 
       echo "$(vmstat -s)" # 61944 K free memory
 
-      echo_c "ifconfig -a"
-      echo "$(ifconfig -a)"
+      echo_c "dig +short myip.opendns.com @resolver1.opendns.com"  # public networking IP address
+      echo "$(dig +short myip.opendns.com @resolver1.opendns.com)"
 
       echo_c "grep MemFree /proc/meminfo" 
       echo "$(grep MemFree /proc/meminfo)" # MemFree: 67232 kB
