@@ -120,28 +120,31 @@ fi
       echo_c "rbenv install 2.3.7  # CAUTION: Back version to avoid Nokigiri issue." 
               rbenv install 2.3.7
 
-#      echo_c "sudo apt-get install ruby-full -y" 
-#              sudo apt-get install ruby-full -y
+#      echo_c "sudo apt-get install -y ruby-full" 
+#              sudo apt-get install -y ruby-full
 
       echo_c "ruby -v" # ruby 2.5.1p57 (2018-03-29 revision 63029) [x86_64-linux-gnu]
               ruby -v
 
 
-      echo_c "sudo apt install libpq-dev"
-              sudo apt install libmagickwand-dev
+      echo_c "sudo apt install -y libpq-dev"
+              sudo apt install -y libmagickwand-dev
 
-      echo_c "sudo apt install libpq-dev"
-              sudo apt install libmagickwand-dev
+      echo_c "sudo apt install -y libpq-dev"
+              sudo apt install -y libmagickwand-dev
 
 
-      echo_c "Get from GitHub a specific branch:"
       GIT_BRANCH="upgrade-rails-4.0"
+      echo_c "Remove folder added by GitHub command:"
+      rm -rf "ipo-web"
+      
+      echo_c "Get from GitHub a specific branch:"
       git clone --branch "$GIT_BRANCH" --single-branch https://github.com/ipoconnection/ipo-web.git  
       cd "$GIT_BRANCH"
       ls
 
-      echo_c "sudo apt-get install ruby-bundler -y" 
-              sudo apt-get install ruby-bundler -y
+      echo_c "sudo apt-get install -y ruby-bundler"
+              sudo apt-get install -y ruby-bundler
 
       echo_c "bundle install"
       echo "$(bundle install)"
