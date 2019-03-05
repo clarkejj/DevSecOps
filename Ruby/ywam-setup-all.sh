@@ -111,9 +111,6 @@ fi
       echo_c "sudo apt-get update" 
               sudo apt-get update
 
-# instead on using Gemfile:
-# sudo apt-get install build-essential libssl-dev libyaml-dev libreadline-dev openssl curl git-core zlib1g-dev bison libxml2-dev libxslt1-dev libcurl4-openssl-dev nodejs libsqlite3-dev sqlite3
-
       echo_c "sudo apt-get install -y pwgen  # password generator" 
               sudo apt-get install -y pwgen
 
@@ -135,6 +132,12 @@ fi
 
       echo_c "sudo apt install -y libpq-dev"
               sudo apt install -y libmagickwand-dev
+
+      echo_c "sudo apt install -y postgresql  imagemagick  redis-server"
+
+# instead on using Gemfile:
+# sudo apt-get install build-essential libssl-dev libyaml-dev libreadline-dev openssl curl git-core zlib1g-dev bison libxml2-dev libxslt1-dev libcurl4-openssl-dev nodejs libsqlite3-dev sqlite3
+
 
    # Delete previous folder:
       GIT_BRANCH="upgrade-rails-4.0"
