@@ -133,7 +133,14 @@ fi
       echo_c "sudo apt install -y libpq-dev"
               sudo apt install -y libmagickwand-dev
 
-      echo_c "sudo apt install -y postgresql  imagemagick  redis-server"
+      echo_c "sudo apt install -y postgresql"
+              sudo apt install -y postgresql
+      
+      echo_c "sudo apt install -y redis-server"
+              sudo apt install -y redis-server
+      
+      echo_c "sudo apt install -y imagemagick"
+              sudo apt install -y imagemagick
 
 # instead on using Gemfile:
 # sudo apt-get install build-essential libssl-dev libyaml-dev libreadline-dev openssl curl git-core zlib1g-dev bison libxml2-dev libxslt1-dev libcurl4-openssl-dev nodejs libsqlite3-dev sqlite3
