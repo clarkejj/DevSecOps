@@ -87,10 +87,7 @@ if [[ $platform == 'linux' ]]; then
       echo -e "$(lsb_release -rs)"
 
       echo_cmd "lscpu"
-#echo "$(lscpu)"
-
-      echo_c "lshw -short"
-      echo "$(lshw -short)"
+      echo_cmd "lshw -short"
 exit
 
       echo_c "apt --version"  # package manager for Ubuntu
