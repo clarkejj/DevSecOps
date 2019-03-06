@@ -43,6 +43,11 @@ function echo_c() {  # echo command
 command_exists() {  # newer than which {command}
   command -v "$@" > /dev/null 2>&1
 }
+function echo_cmd() {  # echo command
+  local fmt="$1"; shift
+  printf "\\n  $ $fmt\\n" "$@"
+  "$@"
+}
 
 clear
 
@@ -81,8 +86,9 @@ if [[ $platform == 'linux' ]]; then
          echo_c "lsb_release -rs"  # Ubuntu release 18.04
       echo -e "$(lsb_release -rs)"
 
-      echo_c "lscpu"
-      echo "$(lscpu)"
+      echo_cmd "lscpu"
+exit
+echo "$(lscpu)"
 
       echo_c "lshw -short"
       echo "$(lshw -short)"
