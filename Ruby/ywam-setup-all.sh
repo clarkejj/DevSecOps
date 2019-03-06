@@ -46,9 +46,9 @@ command_exists() {  # newer than which {command}
 function echo_cmd() {  # echo command
   local fmt="$1"; shift
   printf "\\n  $ $fmt\\n" "$@"
-  "$fmt"
+  "$@"
 }
-function echo_pkg_install() {  # echo command
+function echo_pkg_install() {  # echo install package
   local fmt="$1"; shift
   printf "\\n  $ $fmt\\n" "$@"
   sudo apt install -y "$fmt"
