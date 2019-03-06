@@ -48,6 +48,11 @@ function echo_cmd() {  # echo command
   printf "\\n  $ $fmt\\n" "$@"
   "$fmt"
 }
+function echo_pkg_install() {  # echo command
+  local fmt="$1"; shift
+  printf "\\n  $ $fmt\\n" "$@"
+  sudo apt install -y "$fmt"
+}
 
 clear
 
@@ -88,35 +93,19 @@ if [[ $platform == 'linux' ]]; then
 
       echo_cmd "lscpu"
       echo_cmd "lshw -short"
-exit
+      echo_cmd "apt --version"  # package manager for Ubuntu
+      echo_cmd "git --version"  # git version 2.17.1
+      echo_cmd "free -m"
+      echo_cmd "vmstat -s"  # 61944 K free memory
+      echo_cmd "dig +short myip.opendns.com @resolver1.opendns.com"  # public networking IP address
+      echo_cmd "grep MemFree /proc/meminfo" # MemFree: 67232 kB
 
-      echo_c "apt --version"  # package manager for Ubuntu
-      echo "$(apt --version)"  # apt 1.6.3ubuntu0.1 (amd64)
-
-      echo_c "git --version" 
-      echo "$(git --version)" # git version 2.17.1
-
-      echo_c "free -m" 
-      echo "$(free -m)" # git version 2.17.1
-
-      echo_c "vmstat -s"  # Virtual Memory: 
-      echo "$(vmstat -s)" # 61944 K free memory
-
-      echo_c "dig +short myip.opendns.com @resolver1.opendns.com"  # public networking IP address
-      echo "$(dig +short myip.opendns.com @resolver1.opendns.com)"
-
-      echo_c "grep MemFree /proc/meminfo" 
-      echo "$(grep MemFree /proc/meminfo)" # MemFree: 67232 kB
-      
 fi
 
 ####
-      echo_c "sudo apt-get update" 
-              sudo apt-get update
-
-      echo_c "sudo apt-get install -y pwgen  # password generator" 
-              sudo apt-get install -y pwgen
-
+      echo_cmd "sudo apt-get update"
+      echo_pkg_install "sudo apt-get install -y pwgen"  # password generator
+exit
       echo_c "sudo apt-get install -y ruby-build" 
               sudo apt-get install -y ruby-build
 
