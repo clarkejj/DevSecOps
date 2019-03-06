@@ -43,16 +43,6 @@ function echo_c() {  # echo command
 command_exists() {  # newer than which {command}
   command -v "$@" > /dev/null 2>&1
 }
-function echo_cmd() {  # echo command
-  local fmt="$1"; shift
-  printf "\\n  $ $fmt\\n" "$@"
-  "$1"
-}
-function echo_pkg_install() {  # echo install package
-  local fmt="$1"; shift
-  printf "\\n  $ $fmt\\n" "$@"
-  sudo apt install -y "$1"
-}
 
 clear
 
@@ -91,21 +81,39 @@ if [[ $platform == 'linux' ]]; then
          echo_c "lsb_release -rs"  # Ubuntu release 18.04
       echo -e "$(lsb_release -rs)"
 
-      echo_cmd "lscpu"
-      echo_cmd "lshw -short"
-      echo_cmd "apt --version"  # package manager for Ubuntu
-      echo_cmd "git --version"  # git version 2.17.1
-      echo_cmd "free -m"
-      echo_cmd "vmstat -s"  # 61944 K free memory
-      echo_cmd "dig +short myip.opendns.com @resolver1.opendns.com"  # public networking IP address
-      echo_cmd "grep MemFree /proc/meminfo" # MemFree: 67232 kB
+      echo_c "lscpu"
+      echo "$(lscpu)"
 
+      echo_c "lshw -short"
+      echo "$(lshw -short)"
+
+      echo_c "apt --version"  # package manager for Ubuntu
+      echo "$(apt --version)"  # apt 1.6.3ubuntu0.1 (amd64)
+
+      echo_c "git --version" 
+      echo "$(git --version)" # git version 2.17.1
+
+      echo_c "free -m" 
+      echo "$(free -m)" # git version 2.17.1
+
+      echo_c "vmstat -s"  # Virtual Memory: 
+      echo "$(vmstat -s)" # 61944 K free memory
+
+      echo_c "dig +short myip.opendns.com @resolver1.opendns.com"  # public networking IP address
+      echo "$(dig +short myip.opendns.com @resolver1.opendns.com)"
+
+      echo_c "grep MemFree /proc/meminfo" 
+      echo "$(grep MemFree /proc/meminfo)" # MemFree: 67232 kB
+      
 fi
 
 ####
-      echo_cmd "sudo apt-get update"
-      echo_pkg_install "sudo apt-get install -y pwgen"  # password generator
-exit
+      echo_c "sudo apt-get update" 
+              sudo apt-get update
+
+      echo_c "sudo apt-get install -y pwgen  # password generator" 
+              sudo apt-get install -y pwgen
+
       echo_c "sudo apt-get install -y ruby-build" 
               sudo apt-get install -y ruby-build
 
@@ -115,15 +123,13 @@ exit
 #      echo_c "sudo apt-get install -y ruby-full" 
 #              sudo apt-get install -y ruby-full
 
-      echo_c "ruby -v" # ruby 2.5.1p57 (2018-03-29 revision 63029) [x86_64-linux-gnu]
-              ruby -v
-
-      echo_c "sudo apt-get install -y bundler" 
-              sudo apt-get install -y bundler
-
       # https://stackoverflow.com/questions/20559255/error-while-installing-json-gem-mkmf-rb-cant-find-header-files-for-ruby
       sudo apt-get install ruby`ruby -e 'puts RUBY_VERSION[/\d+\.\d+/]'`-dev
          # which issues sudo apt-get install ruby-dev  ruby2.0-dev  ruby2.2-dev  ruby2.3-dev
+
+      echo_c "ruby -v" # ruby 2.5.1p57 (2018-03-29 revision 63029) [x86_64-linux-gnu]
+              ruby -v
+
 
       echo_c "sudo apt install -y libpq-dev"
               sudo apt install -y libmagickwand-dev
