@@ -46,12 +46,12 @@ command_exists() {  # newer than which {command}
 function echo_cmd() {  # echo command
   local fmt="$1"; shift
   printf "\\n  $ $fmt\\n" "$@"
-  "$@"
+  "$1"
 }
 function echo_pkg_install() {  # echo install package
   local fmt="$1"; shift
   printf "\\n  $ $fmt\\n" "$@"
-  sudo apt install -y "$fmt"
+  sudo apt install -y "$1"
 }
 
 clear
