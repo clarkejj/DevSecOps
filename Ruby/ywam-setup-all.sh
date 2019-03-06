@@ -46,7 +46,7 @@ command_exists() {  # newer than which {command}
 function echo_cmd() {  # echo command
   local fmt="$1"; shift
   printf "\\n  $ $fmt\\n" "$@"
-  "$@"
+  "$1"
 }
 
 clear
