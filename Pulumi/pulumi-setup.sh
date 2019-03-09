@@ -27,6 +27,7 @@ MY_AWS_PROFILE="default"
 MY_AWS_REGION="us-west-2"  # or "us-east-1", etc.
 PULUMI_ACCESS_FILE="$HOME/.pulumi.env"
 AZURE_ACCESS_FILE="$HOME/.azure.env"
+AZURE_REGION="eastus"
 MY_PULUMI_FOLDER="$HOME/.pulumi" # default by sh installer.
 MY_PULUMI_USER="wilsonmar"
 MY_FOLDER="fargate-pulumi"
@@ -80,6 +81,7 @@ function fancy_echo() {
 command_exists() {
   command -v "$@" > /dev/null 2>&1
 }
+
 function BASHFILE_EXPORT() {
    # example: BASHFILE_EXPORT "gitup" "open -a /Applications/GitUp.app"
    name=$1
@@ -131,6 +133,7 @@ h2 "Ensure Xcode-CLI is installed:"  # See https://wilsonmar.github.io/xcode
       xcode-select --install --reset  # /Library/Developer/CommandLineTools
       # Xcode installs its git to /usr/bin/git; recent versions of OS X (Yosemite and later) ship with stubs in /usr/bin, which take precedence over this git. 
    fi
+
 
 h2 "Ensure Homebrew is installed:"  # See https://wilsonmar.github.io/homebrew
    if ! command_exists brew ; then
@@ -236,7 +239,7 @@ h2 "Ensure Azure CLI is installed:" # https://docs.microsoft.com/en-us/cli/azure
 
 h2 "Populate Azure credentials from $AZURE_ACCESS_FILE"
    # Instead of storing access codes in the repository:
-   # AZURE_ACCESS_FILE="$HOME/.azure.env"
+   # AZURE_ACCESS_FILE="$HOME/.azure.env" defined at top of this file.
    if [ ! -f "$AZURE_ACCESS_FILE" ]; then  # file's there:
       note "File $AZURE_ACCESS_FILE not found to populate AZURE_ACCESS_TOKEN. Downloding template..."
       curl --url "https://raw.githubusercontent.com/wilsonmar/DevSecOps/master/Pulumi/.azure.env" \
@@ -251,6 +254,17 @@ h2 "Populate Azure credentials from $AZURE_ACCESS_FILE"
       fi
    fi
 
+// TODO: Create resource group and get ID:
+// az vm create \
+//   --name myVM \
+//   --resource-group b186b890-ba41-4b21-90b6-4ad397137632 \
+//   --image Win2016Datacenter \
+//   --size Standard_DS2_v2 \
+//   --location eastus \
+//   --admin-username $AZURE_USERNAME \
+//   --admin-password $AZURE_PASSWORD
+
+
 h2 "Ensure latest Node.js is installed:"  # See https://wilsonmar.github.io/node
    if ! command_exists node ; then
        note "Installing latest node using brew..."
@@ -262,6 +276,11 @@ h2 "Ensure latest Node.js is installed:"  # See https://wilsonmar.github.io/node
        fi
    fi
    info "Node: $(node --version)"  # v9.11.1
+
+
+h2 "Ensure Google Cloud (GCloud) client is installed:"
+
+   // GOOGLE_APPLICATION_CREDENTIALS="$HOME/keyfile.json"
 
 
 h2 "Ensure Go is installed:"  # See https://wilsonmar.github.io/golang
