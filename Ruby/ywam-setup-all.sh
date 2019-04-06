@@ -73,8 +73,8 @@ elif [[ "$unamestr" == 'FreeBSD' ]]; then
 elif [[ "$UNAME_PREFIX" == 'MINGW64_NT' ]]; then  # MINGW64_NT-6.1 or MINGW64_NT-10 for Windows 10
               platform='windows'  # systeminfo on windows https://en.wikipedia.org/wiki/MinGW
 fi
-echo "Platform: $platform"
-
+export EXT_PUBLIC_IP=$(drill myip.opendns.com @resolver1.opendns.com | grep '^myip' | cut -f 5)
+echo "Platform: $platform on IP: $EXT_PUBLIC_IP"
 
 if [[ $platform == 'linux' ]]; then
 
@@ -86,6 +86,9 @@ if [[ $platform == 'linux' ]]; then
 
       echo_c "lshw -short"
       echo "$(lshw -short)"
+
+      echo_c "modinfo ena" # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enhanced-networking-ena.html
+      echo "$(modinfo ena)"
 
       echo_c "apt --version"  # package manager for Ubuntu
       echo "$(apt --version)"  # apt 1.6.3ubuntu0.1 (amd64)
@@ -107,7 +110,64 @@ if [[ $platform == 'linux' ]]; then
       
 fi
 
+#### Amazon information:
+      # install aws cli:
+      # install jq to parse JSON:
+      export AWS_SGID=$(aws ec2 describe-security-groups --filter "Name=group-name,Values=default" | jq -sr '.[].SecurityGroups[].GroupId')
+
+      export AWS_PUBLIC_IP=$(aws ec2 describe-instances --filters 'Name=tag:os,Values=rancheros' 'Name=instance-state-name,Values=running' --query 'Reservations[].Instances[].PublicIpAddress' --output text | tr -d '\r')
+      # to ssh rancher@$AWS_PUBLIC_IP
+
+      # Confirm Docker daemon configuration:
+      sudo ps -C dockerd --format -args -www
+         # --userland-proxy=false ... --label os=rancheros
+
+      # List PID 1 = system-docker :
+      ps -p 1
+      # Format list of containers:
+      sudo system-docker ps --format 'table {{.ID}}\t{{.Image}}\\t{{.Command}}\t{{.Names}}'
+         # (the user-docker runs inside each container)
+
+      export PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+      export PUBLIC_HOSTNAME=$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)
+      echo "PUBLIC_IP: $PUBLIC_IP, PUBLIC_HOSTNAME: $PUBLIC_HOSTNAME"
+
+      # Use ros utility to generate keys:
+      sudo ros tls gen -s -H $PUBLIC_ID $PUBLIC_HOSTNAME
+      sudo ros config set rancher.docker.tls true
+
+      # Restart after IP config:
+      sudo system-docker restart docker
+
+      # Confirm Docker daemon configuration:
+      sudo ps -C dockerd --format -args -www
+         # --tlsverify --tlscacert=/etc/docker/tls/ca.pem ...
+
+      sudo ros tls gen
+         # default: /home/rancher/.docker
+
+      # Verify access to client metadata (versions, commit):
+      docker --tlsverify version
+
+      logout
+
+      # Copy ca-key.pem, ca.pem, cert.pem, key.pem:
+      scp rancher@@$AWS_PUBLIC_IP:~/.docker/*.pem ~/.docker
+
+      # 
+      export DOCKER_HOST=tcp://${AWS_PUBLIC_IP}:2376 DOCKER_TLS_VERIFY=1
+      # Get Hostname, OS, Labels such as "[os=rancheros]"
+      docker info --format 'Hostname: {{println .Name}}OS: {{println. OperatingSystem}}Labels: {{.Labels}}'
+
+      #
+      docker container run -itd --rm -p 3000:80 \
+         -v /etc/homename://etc/docker-hostname:ro \
+         --name nginxhello nbrown/nginxhello
+
+      # View the instance in the browser 35.178.134.50.
+
 ####
+
       echo_c "sudo apt-get update" 
               sudo apt-get update
 

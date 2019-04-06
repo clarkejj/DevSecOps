@@ -1,10 +1,9 @@
 # Dockerfile at https://github.com/wilsonmar/DevSecOps/master/blob/Jmeter/docker-jmeter
 # Based on https://www.blazemeter.com/blog/make-use-of-docker-with-jmeter-learn-how
 
-# 1 - Define the image baseline for the build. The baseline can be fetched by the local cache or remote repository:
-
-FROM alpine:3.6
-     # A valid Dockerfile must start with this primitive:
+# 1 - FROM keyword defines the image baseline fetched from local cache or remote DockerHub:
+FROM alpine:4.0
+     # A valid Dockerfile must start with this primitive 3.6 and 4.0
 
 # 2
 LABEL maintainer="wilsonmar@gmail.com"
@@ -19,6 +18,7 @@ ENV MIRROR_HOST http://mirrors.ocf.berkeley.edu/apache/jmeter
 ENV JMETER_DOWNLOAD_URL ${MIRROR_HOST}/binaries/apache-jmeter-${JMETER_VERSION}.tgz
 ENV JMETER_PLUGINS_DOWNLOAD_URL http://repo1.maven.org/maven2/kg/apc
 ENV JMETER_PLUGINS_FOLDER ${JMETER_HOME}/lib/ext/
+ENV TZ America/Los_Angeles
 
 # 5 - Run a single command for a more efficient single Docker layer:
 RUN    apk update \
@@ -26,8 +26,8 @@ RUN    apk update \
 	&& apk add ca-certificates \
 	&& update-ca-certificates \
             && apk add --update openjdk8-jre tzdata curl unzip bash \
-            && cp /usr/share/zoneinfo/Europe/Rome /etc/localtime \
-            && echo "Europe/Rome" >  /etc/timezone \
+            && cp /usr/share/zoneinfo/UTC /etc/localtime \
+            && echo "UTC" >  /etc/timezone \
 	&& rm -rf /var/cache/apk/* \
 	&& mkdir -p /tmp/dependencies  \
 	&& curl -L --silent ${JMETER_DOWNLOAD_URL} >  /tmp/dependencies/apache-jmeter-${JMETER_VERSION}.tgz  \
