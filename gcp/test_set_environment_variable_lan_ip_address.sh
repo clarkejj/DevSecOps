@@ -41,3 +41,42 @@ touch aTemporaryTestFile
 #delete the file
 rm aTemporaryTestFile
 [ ! -f 'aTemporaryTestFile' ] &&  echo '>>> aTemporaryTestFile no longer found'
+
+# 
+# create a file then change a value contained in the file
+cat > instance.tf <<\EOF
+resource "google_compute_instance" "default" {
+  project      = "<PROJECT_ID>"
+  name         = "terraform"
+  machine_type = "n1-standard-1"
+  zone         = "us-central1-a"
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-9"
+    }
+  }
+
+  network_interface {
+    network = "default"
+    access_config {
+    }
+  }
+} 
+EOF
+# now substitute <PROJECT_ID> placeholder tag in the file with the actual <PROJECT_ID> value
+# https://likegeeks.com/sed-linux/
+PROJECT_ID=qwiklabs-gcp-44776a13dea667a6
+sed -i 's/<PROJECT_ID>/$PROJECT_ID/' instance.tf
+#GCP_PROJECT=$(gcloud config list project | grep project | awk -F= '{print $2}' )
+   # awk -F= '{print $2}'  extracts 2nd word in response:
+   # project = qwiklabs-gcp-9cf8961c6b431994
+   # Your active configuration is: [cloudshell-19147]
+#PROJECT_ID=$(gcloud config list project --format "value(core.project)")
+#echo ">>> GCP_PROJECT=$GCP_PROJECT, PROJECT_ID=$PROJECT_ID"  # response: "qwiklabs-gcp-9cf8961c6b431994"
+# confirm the file contains that value
+grep -q "PROJECT_ID" instance.tf; [ $? -eq 0 ] && echo "yes" || echo "no"
+# grep -q "something" file; test $? -eq 0 && echo "yes" || echo "no"
+# grep -q "something" file && echo "yes" || echo "no"
+
+
