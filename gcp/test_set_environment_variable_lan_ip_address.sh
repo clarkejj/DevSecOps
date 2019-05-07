@@ -76,7 +76,46 @@ sed -i 's/<PROJECT_ID>/$PROJECT_ID/' instance.tf
 #echo ">>> GCP_PROJECT=$GCP_PROJECT, PROJECT_ID=$PROJECT_ID"  # response: "qwiklabs-gcp-9cf8961c6b431994"
 # confirm the file contains that value
 grep -q "PROJECT_ID" instance.tf; [ $? -eq 0 ] && echo "yes" || echo "no"
+grep -q "PROJECT_ID" instance.tf && echo "yes" || echo "no"
 # grep -q "something" file; test $? -eq 0 && echo "yes" || echo "no"
 # grep -q "something" file && echo "yes" || echo "no"
+
+# In a shell script, validate a command's expected output 
+# ./somecommand | grep 'string' &> /dev/null
+# if [ $? == 0 ]; then
+#   echo "matched"
+# fi
+## Note that Testing $? is an anti-pattern one option is this:
+#
+# if ./somecommand | grep -q 'string'; then echo "matched" fi
+# and also: 
+# ./somecommand | grep -q 'string' && echo 'matched'
+
+# https://www.linode.com/docs/networking/ssh/persistent-terminal-sessions-with-tmux/
+# https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/
+# https://linuxize.com/post/getting-started-with-tmux/
+# open some shell terminal sessions 
+tmux new-session -s 'devops project'
+tmux select-window -t 0
+tmux select-window -t 1 | grep -q 'can't find window 1'
+tmux new-window -t 1
+tmux select-window -t 1 && echo "yes" || echo "no"
+# list windows
+tmux list-windows
+# 0: clarkej@tango:~- (1 panes) [158x50] [layout b1bd,158x50,0,0,0] @0
+# 1: clarkej@tango:~* (1 panes) [158x50] [layout b1be,158x50,0,0,1] @1 (active)
+tmux select-window -t 1; [ $? -eq 0 ] && echo "yes" || echo "no"
+tmux rename-window -t 1 "kube window"
+tmux new-window -t 2
+tmux rename-window -t 2 "curl window"
+
+tmux rename-session -t 0 "devops"
+tmux rename-window -t 0 "kube window"
+tmux kill-window -t 0
+tmux select-pane -t 0
+tmux list-panes
+
+
+
 
 
