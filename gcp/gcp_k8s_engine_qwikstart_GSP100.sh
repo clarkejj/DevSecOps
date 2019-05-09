@@ -3,7 +3,7 @@
 # To run this script session, copy and paste this command in the local console: 
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/clarkejj/DevSecOps/master/gcp/gcp_k8s_engine_qwikstart_GSP100.sh)"
 
-# SCRIPT STATUS: WORKING. Results obtained after running twice on May 2, 2019.
+# SCRIPT STATUS: WORKING. Results obtained after running twice on May 8, 2019.
 # This script performs the commands described in the "Kubernetes Engine: Qwik Start" (GSP100) hands-on lab at
 #    https://google.qwiklabs.com/focuses/878?parent=catalog
 # This lab is part of this quest https://google.qwiklabs.com/quests/29 Kubernetes in the Google Cloud
@@ -53,9 +53,7 @@ kubectl run hello-server --image=gcr.io/google-samples/hello-app:1.0 --port 8080
 # deployment.apps "hello-server" created
 
 # This Kubernetes command creates a Deployment object that represents hello-app. In this command:
-
 # --image specifies a container image to deploy. In this case, the command pulls the example image from a Google Container Registry bucket. gcr.io/google-samples/hello-app:1.0 indicates the specific image version to pull. If a version is not specified, the latest version is used.
-
 # --port specifies the port that the container exposes.
 
 # Now create a Kubernetes Service, which is a Kubernetes resource that lets you expose your application to external traffic, by running the following kubectl expose command:
@@ -68,6 +66,8 @@ kubectl expose deployment hello-server --type="LoadBalancer"
 
 # Inspect the hello-server Service by running kubectl get:
 # kubectl get service hello-server
+# NAME         TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)    AGE
+# my-service   LoadBalancer   10.3.245.137   104.198.205.71   8080/TCP   54s
 EXTERNAL_IP=$( kubectl get service hello-server | awk 'FNR == 2' | awk '{print $4}' )
 
 # You should receive a similar output:
@@ -77,11 +77,11 @@ EXTERNAL_IP=$( kubectl get service hello-server | awk 'FNR == 2' | awk '{print $
 # From this command's output, copy the Service's external IP address from the EXTERNAL IP column.
 
 # View the application from your web browser using the external IP address with the exposed port:
-
-http://EXTERNAL-IP:8080
+# http://EXTERNAL-IP:8080
+curl http://$EXTERNAL_IP:8080
 
 # Run the following to delete the cluster:
-gcloud container clusters delete [CLUSTER-NAME]
+gcloud container clusters delete $CLUSTER-NAME
 
 # When prompted, type Y to confirm. Deleting the cluster can take a few minutes. For more information on deleted Google Kubernetes Engine clusters, view the documentation.
 
